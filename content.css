@@ -1,0 +1,14 @@
+#altera-cog {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s;
+}
+
+#altera-cog:hover {
+  transform: rotate(90deg);
+}

@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Altera",
+  "version": "1.0",
+  "description": "Customize your D2L/Courselink UI with themes, images, and more!",
+  "icons": {
+    "128": "icons/cog-icon.png"
+  },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["https://courselink.uoguelph.ca/*"],
+      "css": ["content.css"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/cog-icon.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,14 +1,20 @@
-#altera-cog {
+#altera-settings-panel {
   position: fixed;
-  bottom: 20px;
+  bottom: 80px;
   right: 20px;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  transition: transform 0.2s;
+  display: none;
 }
 
-#altera-cog:hover {
-  transform: rotate(90deg);
+#altera-settings-panel h2 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+}
+
+.toggle-group {
+  margin-bottom: 10px;
 }

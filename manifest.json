@@ -3,6 +3,14 @@
   "name": "Altera",
   "version": "1.0",
   "description": "Customize your D2L/Courselink UI with themes, images, and more!",
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/cog-icon.png",
+      "48": "icons/cog-icon.png",
+      "128": "icons/cog-icon.png"
+    }
+  },
   "icons": {
     "128": "icons/cog-icon.png"
   },
@@ -10,6 +18,7 @@
   "content_scripts": [
     {
       "matches": ["https://courselink.uoguelph.ca/*"],
+      "run_at": "document_end",
       "css": ["content.css"],
       "js": ["content.js"]
     }

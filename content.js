@@ -1,21 +1,14 @@
-// Inject the settings cog into Courselink
-const cog = document.createElement("img");
-cog.src = chrome.runtime.getURL("icons/cog-icon.png");
-cog.id = "altera-cog";
-document.body.appendChild(cog);
-
-// Open settings panel on cog click
-cog.addEventListener("click", () => {
-  chrome.runtime.sendMessage({ action: "openSettings" });
-});
-
 // Apply stored settings on page load
 chrome.storage.sync.get(["darkMode", "customImage"], (data) => {
-  if (data.darkMode) applyDarkMode();
-  if (data.customImage) replaceCourseImages(data.customImage);
+  if (data.darkMode) {
+    applyDarkMode();
+  }
+  if (data.customImage) {
+    replaceCourseImages(data.customImage);
+  }
 });
 
-// Listen for real-time changes
+// Listen for real-time changes from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "toggleDarkMode") {
     request.value ? applyDarkMode() : removeDarkMode();
@@ -27,24 +20,32 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Dark Mode Functions
 function applyDarkMode() {
+  // Prevent multiple dark mode style elements
+  if (document.getElementById("altera-dark-mode")) return;
   const style = document.createElement("style");
   style.id = "altera-dark-mode";
   style.textContent = `
-      body { background: #1a1a1a !important; color: #e0e0e0 !important; }
-      /* Add more D2L-specific selectors here */
-    `;
+    body, .d2l-container, .d2l-header, .d2l-footer {
+      background: #1a1a1a !important;
+      color: #e0e0e0 !important;
+    }
+    /* Add additional selectors as needed */
+  `;
+  console.log("Applying dark mode");
   document.head.appendChild(style);
 }
 
 function removeDarkMode() {
   const style = document.getElementById("altera-dark-mode");
-  if (style) style.remove();
+  if (style) {
+    console.log("Removing dark mode");
+    style.remove();
+  }
 }
 
-// Image Replacement
+// Image Replacement Function
 function replaceCourseImages(imageURL) {
   document.querySelectorAll(".course-image-class").forEach((img) => {
-    // Update selector for D2L
     img.src = imageURL;
   });
 }

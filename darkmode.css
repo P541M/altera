@@ -1,0 +1,24 @@
+/* darkmode.css – global dark mode overrides */
+html,
+body {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+a {
+  color: #bb86fc !important;
+}
+
+/* Override some D2L CSS variables for dark mode */
+:root {
+  --d2l-color-regolith: #1e1e1e;
+  --d2l-color-sylvite: #2c2c2e;
+  --d2l-color-gypsum: #444444;
+  --d2l-color-mica: #555555;
+  --d2l-color-corundum: #666666;
+  --d2l-color-chromite: #777777;
+  --d2l-color-galena: #888888;
+  --d2l-color-tungsten: #999999;
+  --d2l-color-ferrite: #aaaaaa;
+  --d2l-branding-primary-color: #bb86fc;
+}

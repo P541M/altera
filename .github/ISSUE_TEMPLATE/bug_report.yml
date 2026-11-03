@@ -1,0 +1,81 @@
+name: Bug report
+description: Something on CourseLink looks wrong or doesn't work with Altera.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. CourseLink pages show your name, courses and grades, so please crop or blur screenshots before attaching them.
+  - type: textarea
+    id: what
+    attributes:
+      label: What's wrong?
+      description: What you see, and what you expected to see.
+      placeholder: The "Closed" badge on past courses has a white outline.
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: The page's address. You can remove the numbers from it.
+      placeholder: https://courselink.uoguelph.ca/d2l/home
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What you clicked or opened to get there. Leave out anything you typed into a form.
+      placeholder: |
+        1. Open the homepage
+        2. Click the 2023 Winter tab in My Courses
+  - type: dropdown
+    id: theme
+    attributes:
+      label: Appearance
+      options:
+        - Dark
+        - Light
+        - System
+    validations:
+      required: true
+  - type: dropdown
+    id: accent
+    attributes:
+      label: Accent
+      options:
+        - Blue
+        - Gryphon red
+        - Gryphon gold
+        - Violet
+        - Mint
+  - type: dropdown
+    id: width
+    attributes:
+      label: Window size
+      options:
+        - Desktop (wider than 1200px)
+        - Narrow (768 to 1200px)
+        - Phone width (narrower than 768px)
+  - type: dropdown
+    id: without
+    attributes:
+      label: Does it still happen with Altera turned off?
+      description: Turn Altera off in chrome://extensions and reload the page. This tells us whether it's Altera or CourseLink.
+      options:
+        - "No, only with Altera on"
+        - "Yes, it happens without Altera too"
+        - "I didn't check"
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 131
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drag an image here. Crop or blur anything personal first.

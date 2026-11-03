@@ -1,20 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <title>Altera</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div class="settings-panel">
-      <h2>Altera Settings</h2>
-      <div class="toggle-group">
-        <label for="darkModeToggle">Dark Mode</label>
-        <input type="checkbox" id="darkModeToggle" />
+    <header class="header">
+      <img class="mark" src="../icons/icon-48.png" alt="" width="22" height="22" />
+      <h1>Altera</h1>
+      <a class="open-link" id="openCourseLink" href="https://courselink.uoguelph.ca/d2l/home" target="_blank" hidden>
+        Open CourseLink
+      </a>
+    </header>
+
+    <section class="section" aria-labelledby="sessionTitle">
+      <h2 id="sessionTitle">Session</h2>
+      <div class="status-row">
+        <span class="dot" id="sessionDot" aria-hidden="true"></span>
+        <p class="status" id="sessionStatus" aria-live="polite">Checking…</p>
+        <button class="icon-button" id="pingNow" type="button" aria-label="Refresh session now" title="Refresh now">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <path d="M13.5 8a5.5 5.5 0 1 1-1.61-3.89" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M12.5 1.75v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
       </div>
-      <div class="toggle-group">
-        <label for="courseImageUpload">Custom Course Image</label>
-        <input type="file" id="courseImageUpload" accept="image/*" />
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title">Keep me signed in</span>
+          <span class="row-hint">Refreshes in the background every 5 minutes</span>
+        </span>
+        <input type="checkbox" class="switch" id="keepAlive" />
+      </label>
+    </section>
+
+    <section class="section" aria-labelledby="themeTitle">
+      <h2 id="themeTitle">Appearance</h2>
+      <div class="themes" role="radiogroup" aria-labelledby="themeTitle">
+        <label class="theme">
+          <input type="radio" name="theme" value="light" />
+          <span class="thumb thumb-light" aria-hidden="true"><span class="bar"></span><span class="tile"><i></i><i></i><b></b></span></span>
+          <span class="theme-name">Light</span>
+        </label>
+        <label class="theme">
+          <input type="radio" name="theme" value="dark" />
+          <span class="thumb thumb-dark" aria-hidden="true"><span class="bar"></span><span class="tile"><i></i><i></i><b></b></span></span>
+          <span class="theme-name">Dark</span>
+        </label>
+        <label class="theme">
+          <input type="radio" name="theme" value="system" />
+          <span class="thumb thumb-system" aria-hidden="true">
+            <span class="half thumb-light"><span class="bar"></span><span class="tile"><i></i><i></i><b></b></span></span>
+            <span class="half thumb-dark"><span class="bar"></span><span class="tile"><i></i><i></i><b></b></span></span>
+          </span>
+          <span class="theme-name">System</span>
+        </label>
       </div>
-    </div>
+
+      <div class="accent-row">
+        <span class="row-title" id="accentLabel">Accent <span class="accent-name" id="accentName"></span></span>
+        <div class="swatches" role="radiogroup" aria-labelledby="accentLabel">
+          <label title="Blue"><input type="radio" name="accent" value="blue" aria-label="Blue" /><span style="--swatch: #66b2ff"></span></label>
+          <label title="Gryphon red"><input type="radio" name="accent" value="gryphon" aria-label="Gryphon red" /><span style="--swatch: #ff7d8b"></span></label>
+          <label title="Gryphon gold"><input type="radio" name="accent" value="gold" aria-label="Gryphon gold" /><span style="--swatch: #f2c14e"></span></label>
+          <label title="Violet"><input type="radio" name="accent" value="violet" aria-label="Violet" /><span style="--swatch: #b7a3ff"></span></label>
+          <label title="Mint"><input type="radio" name="accent" value="mint" aria-label="Mint" /><span style="--swatch: #4fd6ac"></span></label>
+        </div>
+      </div>
+
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title">Darken course files</span>
+          <span class="row-hint">HTML pages your instructors upload</span>
+        </span>
+        <input type="checkbox" class="switch" id="darkContent" />
+      </label>
+    </section>
+
+    <footer class="footer">
+      <span>Alt+Shift+D switches themes</span>
+      <span id="version"></span>
+    </footer>
+
+    <script src="../src/shared/settings.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

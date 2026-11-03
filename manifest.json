@@ -1,35 +1,79 @@
 {
   "manifest_version": 3,
-  "name": "Altera",
-  "version": "1.0",
-  "description": "Customize your D2L/Courselink UI with themes, images, and more!",
+  "name": "Altera for CourseLink",
+  "short_name": "Altera",
+  "version": "2.0.0",
+  "description": "CourseLink, refined.",
+  "minimum_chrome_version": "111",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "action": {
+    "default_title": "Altera",
     "default_popup": "popup/popup.html",
     "default_icon": {
-      "16": "icons/cog-icon.png",
-      "48": "icons/cog-icon.png",
-      "128": "icons/cog-icon.png"
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
     }
   },
-  "icons": {
-    "128": "icons/cog-icon.png"
-  },
-  "permissions": ["storage", "activeTab", "scripting", "alarms"],
+  "permissions": [
+    "storage",
+    "alarms",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://courselink.uoguelph.ca/*"
+  ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.js"
+  },
+  "commands": {
+    "toggle-dark-mode": {
+      "suggested_key": {
+        "default": "Alt+Shift+D"
+      },
+      "description": "Toggle dark mode"
+    }
   },
   "content_scripts": [
     {
-      "matches": ["https://courselink.uoguelph.ca/*"],
-      "run_at": "document_end",
-      "css": ["content.css", "darkmode.css"],
-      "js": ["content.js"]
-    }
-  ],
-  "web_accessible_resources": [
+      "matches": [
+        "https://courselink.uoguelph.ca/*"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "world": "MAIN",
+      "js": [
+        "src/content/main-world.js"
+      ]
+    },
     {
-      "resources": ["icons/cog-icon.png"],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "https://courselink.uoguelph.ca/*"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "css": [
+        "src/styles/theme.css"
+      ],
+      "js": [
+        "src/shared/settings.js",
+        "src/content/theme.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://courselink.uoguelph.ca/*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "src/content/session.js"
+      ]
     }
   ]
 }

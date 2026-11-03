@@ -43,20 +43,27 @@
       --d2l-theme-background-color-interactive-translucent-hover: rgba(0, 0, 0, 0.8);
     }
 
-    /* Course tiles and other cards */
-    d2l-card, .d2l-card-container, .d2l-card-link-container {
+    /* Course tiles and other cards. Only the card itself is filled, as in
+       light mode: past and future courses put their faded image behind the
+       card's inner layers (z-index: -1), so a fill there hides the photo. */
+    d2l-card {
       background-color: var(--alt-surface-2) !important;
       border-color: var(--alt-border-strong) !important;
     }
-    .d2l-organization-image, .d2l-card-header {
+    .d2l-card-container, .d2l-card-link-container {
+      border-color: var(--alt-border-strong) !important;
+    }
+    .d2l-organization-image {
       background-color: var(--alt-surface-3) !important;
     }
 
-    /* Status badges: the course card gives its "Closed" badge a white
-       backing so it reads over course photos; the bold variant puts white
-       text on its state colour, which the palette lightens */
+    /* Status badges: the course card gives its "Closed" badge a white fill
+       and a 2px white ring, the card's own colour, so it reads over course
+       photos; the bold variant puts white text on its state colour, which
+       the palette lightens */
     .d2l-enrollment-card-status-indicator:not([bold]) {
-      background-color: var(--alt-surface) !important;
+      background-color: var(--alt-surface-2) !important;
+      box-shadow: 0 0 0 2px var(--alt-surface-2) !important;
     }
     :host(d2l-status-indicator[bold]) {
       color: var(--alt-bg) !important;
@@ -183,7 +190,9 @@
   // so it follows the theme on and off and survives component re-renders.
   // Results are cached in localStorage so later pages show them immediately.
 
-  const LOGO_CACHE = "altera.logos";
+  // Versioned: logos recoloured by an earlier algorithm are dropped
+  // (the old key is removed on the next cache write).
+  const LOGO_CACHE = "altera.logos.v2";
   const LOGO_CACHE_BUDGET = 300_000; // characters of data URL, all logos together
   const LOGO_SELECTOR = [
     ".d2l-labs-navigation-link-image-container img", // nav bar wordmarks
@@ -289,15 +298,19 @@
     }
     closeRun();
 
-    // Recolour dark, neutral pixels (the lettering) outside the graphic,
-    // keeping alpha so anti-aliased edges stay smooth.
+    // Recolour the lettering, keeping alpha so anti-aliased edges stay smooth:
+    // dark neutral pixels outside the graphic become the text colour, and dark
+    // brand colours anywhere (Guelph-Humber's navy) keep their hue but are
+    // lifted so they read on dark. Bright crest colours are untouched.
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        if (graphic[x]) continue;
         const i = (y * w + x) * 4;
         if (px[i + 3] === 0) continue;
         const [r, g, b] = [px[i], px[i + 1], px[i + 2]];
-        if (Math.max(r, g, b) < 140 && saturation(r, g, b) < 0.3) {
+        const max = Math.max(r, g, b);
+        if (max < 120 && max - Math.min(r, g, b) >= 40) {
+          [px[i], px[i + 1], px[i + 2]] = liftLightness(r, g, b);
+        } else if (!graphic[x] && max < 140 && saturation(r, g, b) < 0.3) {
           [px[i], px[i + 1], px[i + 2]] = TEXT_RGB;
         }
       }
@@ -326,9 +339,26 @@
         kept.unshift(entry);
       }
       localStorage.setItem(LOGO_CACHE, JSON.stringify(Object.fromEntries(kept)));
+      localStorage.removeItem("altera.logos");
     } catch {
       // Storage full or blocked; we just recolour again next time.
     }
+  }
+
+  // Same hue at 75% lightness (saturation capped at 55%): navy becomes a
+  // steel blue around 9:1 on the page surface.
+  function liftLightness(r, g, b) {
+    const [R, G, B] = [r / 255, g / 255, b / 255];
+    const max = Math.max(R, G, B);
+    const d = max - Math.min(R, G, B);
+    const l0 = max - d / 2;
+    const s = Math.min(0.55, d / (1 - Math.abs(2 * l0 - 1)));
+    const h = ((max === R ? ((G - B) / d) % 6 : max === G ? (B - R) / d + 2 : (R - G) / d + 4) * 60 + 360) % 360;
+    const c = (1 - Math.abs(2 * 0.75 - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = 0.75 - c / 2;
+    const [r1, g1, b1] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+    return [r1, g1, b1].map((v) => Math.round((v + m) * 255));
   }
 
   const docAdopted = Object.getOwnPropertyDescriptor(Document.prototype, "adoptedStyleSheets");
@@ -356,10 +386,29 @@
     if (!sheet.disabled) scheduleLogoScan();
   };
   sync();
-  new MutationObserver(sync).observe(root, {
+  new MutationObserver(() => {
+    sync();
+    refreshTabBackgrounds();
+  }).observe(root, {
     attributes: true,
     attributeFilter: ["data-altera-theme"],
   });
+
+  // d2l-tabs copies the colour behind it into an inline custom property when
+  // it connects (unless it's white), and its scroll arrows fade into that
+  // colour. After a theme switch the copy is stale: a dark block behind the
+  // arrows in light mode until the page reloads. Redo it the way the
+  // component does; if that method ever goes away, drop the stale copy.
+  function refreshTabBackgrounds() {
+    for (const tabs of findAll(document, "d2l-tabs")) {
+      const color = tabs._getComputedBackgroundColor?.();
+      if (color && color !== "rgb(255, 255, 255)" && color !== "rgba(255, 255, 255, 1)") {
+        tabs.style.setProperty("--d2l-tabs-background-color", color);
+      } else {
+        tabs.style.removeProperty("--d2l-tabs-background-color");
+      }
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // Pass a successful keep-alive to D2L's session manager. This is the same

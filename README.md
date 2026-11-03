@@ -254,14 +254,16 @@ Places where the token swap alone wasn't enough, and what was done:
 | Unread dots | Fell back to a lightened orange that read as yellow | Pinned to CourseLink's `#e87511`, with a ring cut from the nav colour |
 | Tooltips | Filled with the text colour, so white on near-white | A raised graphite fill |
 | Course tile "..." button | The icon colour followed the on-accent token and vanished | White icon on a dark scrim, as in light mode |
-| "Closed" badges on past courses | White backing from the card, blue text at 2:1 | Surface backing; the bold variant gets dark text |
+| "Closed" badges on past courses | A white fill and a 2px white ring (the card's colour in light mode), with blue text at 2:1 | Fill and ring in the card's dark colour; the bold variant gets dark text |
+| Past and future course images | CourseLink fades them and puts them behind the card's inner layers (`z-index: -1`), so any fill on those layers hides the photo | Only the card itself is filled, as in light mode |
+| Semester tab arrows | `d2l-tabs` copies the colour behind it into an inline style when it loads, so after a theme switch the arrows kept the old theme's backing until a reload | Redone on every theme switch, using the component's own colour lookup |
 | Legacy dialogs (group members, confirmations) | White frame, and a backdrop in the lightest grey that washed the page out | Floating surface and a near-black backdrop |
 | Pop-up windows (Email) | Light title gradient, pale button bar, white recipient fields and chips with a white text-shadow | Flat surfaces, input-coloured fields, dark chips, no emboss |
 | Tables | Header shading leaked onto data rows that are first in their own `tbody` | Shaded only for real column headers (`thead`, `scope="col"`), verified header by header against light mode |
 | Content sidebar | The selected module's pointer is a white SVG triangle | Redrawn as a mask in the panel colour |
 | Burger menu (phone widths) | Panel hard-coded white, and the scrim used the text colour | Surface panel, black scrim |
 | Grade scheme chips | Inline pastel backgrounds that carry meaning | A deep tint of the same hue (see [Inline styles](#layer-4-inline-styles)) |
-| Sign-in page | The yellow Sign In button's label turned light | Kept dark (`#111418`) |
+| Sign-in page | The yellow Sign In button's label turned light; Visitor Login lost its grey fill; the phone-width menu button is an unstyled browser button | Sign In keeps its dark label (`#111418`); Visitor Login and the menu button become secondary buttons with a 3:1 edge |
 | PDF viewer | pdf.js only goes dark with the OS | Its own variables mapped to the palette; the pages themselves stay as authored |
 | Instructor HTML files, and University pages shown in courses (`/shared/`) | Arbitrary colours and their own stylesheets (Bootstrap callouts, panels) | Inverted with a filter, with images and video flipped back |
 | Side lists (Class Progress) | White rows, a light-blue selected row | Surface rows, the accent tint for the selected row |
@@ -419,7 +421,8 @@ under the theme attribute:
 
 | Found | Rule | Becomes |
 | --- | --- | --- |
-| Text colour | Luminance < 0.2 | `--alt-text` |
+| Text colour | A saturated blue (hue 195–240°, a link colour like `#006fbf` or `#295376`) | `--alt-accent` |
+| | Luminance < 0.2 | `--alt-text` |
 | | < 0.4 | `--d2l-color-tungsten` (text-2) |
 | | < 0.5 | `--alt-text-3` |
 | Background | Luminance > 0.85 | `--alt-surface` |
@@ -483,6 +486,11 @@ its negative, so `main-world.js` redraws them instead:
    with gaps of 4px or less bridged so the crest counts as one block.
 4. Outside the graphic, recolour dark neutral pixels (the lettering) to
    `--alt-text`, keeping each pixel's alpha so anti-aliased edges stay smooth.
+   Dark brand colours anywhere in the image (Guelph-Humber's navy lettering)
+   keep their hue and are lifted to 75% lightness, so navy becomes a steel
+   blue that reads on dark. Bright crest colours are never touched. The cache
+   key is versioned (`altera.logos.v2`) so logos recoloured by an older
+   version are redone.
 5. Swap the result in with a rule in the logo sheet:
    `img[src="…"] { content: url(data:…) }`. It switches off with the theme,
    survives component re-renders, and is cached in CourseLink's

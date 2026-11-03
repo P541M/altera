@@ -78,6 +78,7 @@ Find where the light colour comes from, then:
 | A same-origin `<style>` with literal colours | Layer 3 (`remapSheets`) handles it; adjust thresholds only with care |
 | An inline `style=` or legacy `bgcolor` attribute | Layer 4 (`tagInline` in `theme.js`) tags it; style the tag in `theme.css`, and in `SHADOW_CSS` if it appears in authored HTML |
 | A whole frame that isn't Brightspace UI | A new theme mode in `theme.js` (like `pdf` and `content`) |
+| A component that copies a computed colour into an inline style when it loads (`d2l-tabs`) | Redo its computation on theme change in `main-world.js` (`refreshTabBackgrounds`), or it keeps the old theme until a reload |
 
 Prefer the highest layer that works. A variable remap fixes every use at
 once; a selector fixes one.
@@ -170,7 +171,9 @@ extension sitting on top of it:
 - **Meaningful colour survives.** Status colours, grade-scheme tints and
   unread indicators keep their hue. Only lightness moves.
 - **Logos keep their colours.** Only wordmark lettering is recoloured; crests
-  and brand graphics are never inverted or filtered.
+  and brand graphics are never inverted or filtered. Black lettering becomes
+  the text colour; dark brand-coloured lettering (navy) keeps its hue and
+  only gains lightness.
 
 ### Palette
 

@@ -637,6 +637,19 @@ html[data-altera-theme="dark"] .btn.btn-warning:hover,
 html[data-altera-theme="dark"] .btn.btn-warning:focus {
   color: #111418 !important;
 }
+/* Visitor Login is a light grey Bootstrap button; on the page surface it
+   would lose its fill, so it becomes a secondary button with a visible edge.
+   The phone-width menu button is an unstyled browser button in both themes. */
+html[data-altera-theme="dark"] .btn.btn-default,
+html[data-altera-theme="dark"] button#hamburger {
+  background-color: var(--alt-surface-4) !important;
+  border-color: var(--alt-control-border) !important;
+  color: var(--alt-text) !important;
+}
+html[data-altera-theme="dark"] .btn.btn-default:hover,
+html[data-altera-theme="dark"] button#hamburger:hover {
+  background-color: var(--d2l-theme-background-color-interactive-secondary-hover) !important;
+}
 
 /* ---------- Images and charts ---------- */
 

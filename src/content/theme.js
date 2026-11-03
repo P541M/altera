@@ -171,13 +171,20 @@
     return c && c.a >= 0.5 ? relativeLuminance(c) : null;
   }
 
-  // Map a literal light-theme text colour to the dark palette, keeping the
-  // primary / secondary / muted hierarchy.
-  function textVar(l) {
+  // Map a literal light-theme text colour to the dark palette. Saturated
+  // blues are link colours (#006fbf, #295376) and become the accent; the rest
+  // keep their primary / secondary / muted rank.
+  function textVar(color) {
+    const c = parseColor(color);
+    if (!c || c.a < 0.5) return null;
+    const l = relativeLuminance(c);
+    if (l >= 0.5) return null;
+    const max = Math.max(c.r, c.g, c.b);
+    const h = hue(c.r, c.g, c.b);
+    if ((max - Math.min(c.r, c.g, c.b)) / max > 0.35 && h >= 195 && h <= 240) return "var(--alt-accent)";
     if (l < 0.2) return "var(--alt-text)";
     if (l < 0.4) return "var(--d2l-color-tungsten)";
-    if (l < 0.5) return "var(--alt-text-3)";
-    return null;
+    return "var(--alt-text-3)";
   }
 
   // Rewrites colour rules from the page's own (same-origin) stylesheets into
@@ -204,7 +211,7 @@
         const decls = [];
 
         const color = s.getPropertyValue("color");
-        const fg = !color.includes("var(") ? textVar(luminance(color) ?? 1) : null;
+        const fg = !color.includes("var(") ? textVar(color) : null;
         if (fg) decls.push(`color: ${fg} !important`);
 
         const bg = s.getPropertyValue("background-color");

@@ -4,6 +4,7 @@
   "short_name": "Altera",
   "version": "2.0.0",
   "description": "CourseLink, refined.",
+  "homepage_url": "https://github.com/P541M/altera",
   "minimum_chrome_version": "111",
   "icons": {
     "16": "icons/icon-16.png",

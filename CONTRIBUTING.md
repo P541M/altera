@@ -4,7 +4,9 @@ Thanks for helping make CourseLink better. Altera is small and has no build
 step, so you can go from a fresh copy to a working change in a few minutes.
 
 Bug reports, fixes for pages that still look wrong, accessibility
-improvements and documentation are all welcome. For anything bigger, such as
+improvements and documentation are all welcome. Please follow the
+[code of conduct](CODE_OF_CONDUCT.md), and report security issues privately
+as described in [SECURITY.md](SECURITY.md), not as public issues. For anything bigger, such as
 a new feature or setting, open an issue first so we can agree on the approach
 before you put in the work.
 

@@ -59,15 +59,17 @@ to track those down.
 
 ## Install
 
-1. Download or clone this folder.
+1. Get the code from [GitHub](https://github.com/P541M/altera): **Code →
+   Download ZIP** and unzip it, or clone it with
+   `git clone https://github.com/P541M/altera.git`.
 2. Open `chrome://extensions` (or `edge://extensions`, `brave://extensions`).
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and choose this folder (the one containing `manifest.json`).
 5. Pin Altera from the puzzle-piece menu so its icon sits in the toolbar.
 
 CourseLink tabs that are already open pick Altera up immediately; there's no
-need to reload them. After pulling changes, click the reload icon on Altera's
-card in `chrome://extensions`.
+need to reload them. To update, pull (or download the ZIP again into the same
+folder), then click the reload icon on Altera's card in `chrome://extensions`.
 
 ## Using Altera
 
@@ -620,7 +622,10 @@ python tools/make-icons.py              # regenerate the icons (needs Pillow)
 ### How it was tested
 
 Altera is checked in a real Chromium with the unpacked extension loaded
-(Playwright, signed in to a student account):
+(Playwright, signed in to a student account). The crawl scripts aren't part
+of the repository, since they need a signed-in account; the verification
+checklist in [AGENTS.md](AGENTS.md) is the same check done by hand, and the
+pull request template walks through it:
 
 - **Every page.** The crawl visited every tool linked from the navigation across
   five courses: home, course homes, Content and its topics, Dropbox folders,
@@ -684,7 +689,9 @@ Permissions: `storage` (settings), `alarms` (the 5-minute timer), `scripting`
 Fixes, bug reports and documentation are welcome. There's no build step: fork
 the repository, load the folder as an unpacked extension, and reload it after
 each edit. [CONTRIBUTING.md](CONTRIBUTING.md) covers setting up, testing on
-CourseLink without changing anything, and opening a pull request.
+CourseLink without changing anything, and opening a pull request. Everyone
+taking part follows the [code of conduct](CODE_OF_CONDUCT.md), and security
+issues are reported privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 

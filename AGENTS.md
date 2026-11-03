@@ -14,7 +14,7 @@ doing it. Every rule below serves the same test: *would a student forget an
 extension is involved?*
 
 - The tagline is "CourseLink, refined." everywhere it appears (manifest
-  `description`, README header). Taglines never list features. Feature
+  `description`, README header, GitHub repository description). Taglines never list features. Feature
   descriptions belong in the README body and the popup's own labels.
 - Nothing Altera adds is visible on CourseLink pages. No badges, toasts,
   banners, buttons, watermarks or "powered by". The toolbar popup is the only

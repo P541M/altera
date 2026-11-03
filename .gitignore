@@ -1,0 +1,18 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local tooling (the extension itself has no dependencies)
+node_modules/
+__pycache__/
+
+# Icon previews from `python tools/make-icons.py preview.png`
+preview.png
+
+# Packaged builds for a release or the Chrome Web Store
+*.zip
+*.crx
+*.pem

@@ -1,0 +1,25 @@
+name: Idea
+description: Suggest an improvement to Altera.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Altera aims to feel like part of CourseLink: nothing it adds should be visible on the page, and the only Altera controls live in the toolbar popup. Ideas that fit that are the easiest to take on.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to improve?
+      description: The problem or annoyance, in your own words.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Altera help?
+      description: What you imagine it doing. Rough ideas are fine.
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Where this comes up, if it's about a specific page. You can remove the numbers from the address.

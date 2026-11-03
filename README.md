@@ -22,9 +22,16 @@
 - [Development](#development): layout, reloading, testing, tools
 - [Limitations](#limitations)
 - [Privacy](#privacy)
+- [Contributing](#contributing) and [License](#license)
 
 Contributors and coding agents should also read [AGENTS.md](AGENTS.md), which
-holds the rules this document explains.
+holds the rules this document explains, and
+[CONTRIBUTING.md](CONTRIBUTING.md) for how to get a change in.
+
+Altera is an independent, unofficial project. It isn't affiliated with or
+endorsed by the University of Guelph or D2L. CourseLink and Brightspace
+belong to their owners, and Altera ships none of their logos or assets: it
+recolours what CourseLink shows, in your browser.
 
 ## Built for Guelph
 
@@ -671,3 +678,15 @@ remote code. It stores:
 
 Permissions: `storage` (settings), `alarms` (the 5-minute timer), `scripting`
 (switching already-open tabs over on install), and host access to CourseLink.
+
+## Contributing
+
+Fixes, bug reports and documentation are welcome. There's no build step: fork
+the repository, load the folder as an unpacked extension, and reload it after
+each edit. [CONTRIBUTING.md](CONTRIBUTING.md) covers setting up, testing on
+CourseLink without changing anything, and opening a pull request.
+
+## License
+
+[MIT](LICENSE). You're free to use, change and share Altera, as long as the
+copyright notice stays with it.

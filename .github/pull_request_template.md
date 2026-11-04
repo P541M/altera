@@ -21,7 +21,8 @@ From the verification list in [AGENTS.md](https://github.com/P541M/altera/blob/m
 - [ ] Reloaded Altera and checked every page this touches, in dark mode
 - [ ] Light mode is unchanged from CourseLink without Altera
 - [ ] Checked at 390px wide (and the burger menu, if navigation is involved)
-- [ ] Opened every menu, dropdown, dialog, tab and hover state on those pages
+- [ ] Opened every menu, dropdown, dialog, tab and hover state on those pages, and every view a tool offers (Calendar: Day, Week, Month, List)
+- [ ] No light borders, rules or thin bars left over, not just light surfaces
 - [ ] Checked inside frames on those pages (homepage widgets, legacy tools, the PDF viewer)
 - [ ] Measured text contrast on the real page, not just the palette
 - [ ] Any gradient or border in the result also exists with the theme off

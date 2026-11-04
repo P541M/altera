@@ -321,6 +321,12 @@ html[data-altera-theme="dark"] .d2l-le-DataListItem-Selected .d2l-datalist-item-
 html[data-altera-theme="dark"] .d2l-le-DataListItem-Selected:hover .d2l-datalist-item-content {
   background-color: var(--alt-accent-tint) !important;
 }
+/* Its accordion groups are edged in a literal grey */
+html[data-altera-theme="dark"] .d2l-datalist-nesteditem-accordion,
+html[data-altera-theme="dark"] .d2l-datalist-nesteditem-accordion > .d2l-datalist-item-content,
+html[data-altera-theme="dark"] .d2l-datalist > .d2l-datalist-nesteditem-accordion > .d2l-datalist-item-sep {
+  border-color: var(--alt-border) !important;
+}
 
 /* Chart tooltips (Class Progress) */
 html[data-altera-theme="dark"] .d2l-charttooltip {
@@ -334,8 +340,10 @@ html[data-altera-theme="dark"] .dgraphbar2_bar {
   background: var(--alt-surface-4) !important;
   border-color: var(--alt-border-strong) !important;
 }
+/* The fill's light right edge shows even at 0% */
 html[data-altera-theme="dark"] .dgraphbar2_fill {
   background-color: var(--alt-accent) !important;
+  border-right-color: var(--alt-border-strong) !important;
 }
 
 /* FAQ headings */
@@ -373,6 +381,12 @@ html[data-altera-theme="dark"] .d_ua_h {
   border-color: var(--alt-border-strong) !important;
 }
 
+/* Tool headers on a tinted band (Calendar's view switcher) end in a literal
+   grey rule */
+html[data-altera-theme="dark"] .d2l-page-header-dark {
+  border-bottom-color: var(--alt-border) !important;
+}
+
 /* Side columns draw their divider with a light-grey inset shadow */
 html[data-altera-theme="dark"] .d2l-column-side-bg,
 html[data-altera-theme="dark"] .d2l-column-flip-side {
@@ -392,6 +406,10 @@ html[data-altera-theme="dark"] .d2l-footer-default-content p {
   color: var(--alt-text-3) !important;
 }
 
+/* Notifications settings: literal grey dividers between subscription rows */
+html[data-altera-theme="dark"] .d2l-not-subscriptions-table > tbody > tr {
+  border-bottom-color: var(--alt-border) !important;
+}
 /* Pulse app promo on Notifications settings: a hard-coded near-white panel */
 html[data-altera-theme="dark"] .d2l-pulseapp-banner {
   background-color: var(--alt-surface-2) !important;
@@ -468,6 +486,74 @@ html[data-altera-theme="dark"] .d2l-accordion-content {
 html[data-altera-theme="dark"] .d2l-le-disc-post {
   background-color: var(--alt-surface) !important;
   border-color: var(--alt-border) !important;
+}
+
+/* ---------- Calendar ----------
+   Its stylesheet hard-codes greys: #e4e4e4 between cells, #d0d0d0 on the
+   hour, #fafafa for weekends and out-of-hours rows, #f1f1f1 for today. */
+
+html[data-altera-theme="dark"] .d2l-le-calendar-month :is(th, td),
+html[data-altera-theme="dark"] .d2l-le-calendar-week-days .d2l-le-calendar-week-header,
+html[data-altera-theme="dark"] .d2l-le-calendar-week-all td,
+html[data-altera-theme="dark"] .d2l-le-calendar-week-events :is(th, td),
+html[data-altera-theme="dark"] .d2l-le-calendar-day-all th,
+html[data-altera-theme="dark"] .d2l-le-calendar-day-events :is(th, td) {
+  border-color: var(--alt-border) !important;
+}
+html[data-altera-theme="dark"] .d2l-le-calendar-week-events :is(th, td):not(.d2l-le-calendar-half),
+html[data-altera-theme="dark"] .d2l-le-calendar-day-events :is(th, td):not(.d2l-le-calendar-half) {
+  border-bottom-color: var(--alt-border-strong) !important;
+}
+/* :where() keeps these below today's rule, as CourseLink's !important does */
+html[data-altera-theme="dark"] :where(.d2l-le-calendar-out th, .d2l-le-calendar-out td, td.d2l-le-calendar-weekend, th.d2l-le-calendar-weekend, .d2l-le-calendar-week-header.d2l-le-calendar-weekend) {
+  background-color: var(--alt-surface-2) !important;
+}
+html[data-altera-theme="dark"] .d2l-le-calendar-today {
+  background-color: var(--alt-surface-3) !important;
+}
+/* The bar under the all-day row */
+html[data-altera-theme="dark"] .d2l-le-calendar-sep {
+  background-color: var(--alt-surface-3) !important;
+  border-color: var(--alt-border-strong) !important;
+}
+html[data-altera-theme="dark"] .d2l-le-calendar-day-header,
+html[data-altera-theme="dark"] .d2l-le-calendar-week-header,
+html[data-altera-theme="dark"] .d2l-le-calendar-event-overlay {
+  color: var(--alt-text-2) !important;
+}
+html[data-altera-theme="dark"] .d2l-le-calendar-event-overlay-title,
+html[data-altera-theme="dark"] .d2l-le-calendar-listitem-date .d2l-textblock {
+  color: var(--alt-text) !important;
+}
+/* Its white text shadow is invisible on white in light mode */
+html[data-altera-theme="dark"] .d2l-le-calendar-presenters-roles-text .d2l-textblock {
+  color: var(--alt-text-2) !important;
+  text-shadow: none !important;
+}
+html[data-altera-theme="dark"] .d2l-le-calendar-month-warning .d2l-textblock,
+html[data-altera-theme="dark"] .d2l-le-calendar-tasks-overdue .d2l-textblock {
+  color: var(--alt-error) !important;
+}
+html[data-altera-theme="dark"] .d2l-le-calendar-agenda-empty {
+  background-color: var(--alt-surface-2) !important;
+  border-color: var(--alt-border-strong) !important;
+}
+/* Events: a deep tint of their calendar's colour (theme.js reads it from the
+   generated class and sets --altera-tint), with an edge a shade lighter */
+html[data-altera-theme="dark"] a.d2l-le-calendar-event,
+html[data-altera-theme="dark"] a.d2l-le-calendar-event:hover {
+  background-color: var(--altera-tint, var(--alt-surface-3)) !important;
+  border-color: color-mix(in srgb, var(--altera-tint, var(--alt-surface-3)), var(--alt-text) 18%) !important;
+  color: var(--alt-text) !important;
+}
+html[data-altera-theme="dark"] a.d2l-le-calendar-event:focus {
+  box-shadow: 0 0 0 2px var(--alt-surface), 0 0 0 4px var(--alt-accent) !important;
+}
+/* Each calendar's colour dot (calendar menu, Agenda and List): the same hue,
+   light enough to stand out, edged a shade darker as in light mode */
+html[data-altera-theme="dark"] div.d2l-le-calendar-dot-circle {
+  background-color: hsl(from var(--altera-tint, var(--alt-surface-3)) h s 62%) !important;
+  border-color: hsl(from var(--altera-tint, var(--alt-surface-3)) h s 48%) !important;
 }
 
 /* ---------- Inline colours in server-rendered markup ----------
@@ -619,14 +705,20 @@ html[data-altera-theme="dark"] input.d2l-button[primary]:hover {
 html[data-altera-theme="dark"] .d2l-button-filter-item {
   background-color: var(--alt-surface-2) !important;
   color: var(--alt-text) !important;
-  border-color: var(--alt-border-strong) !important;
 }
 html[data-altera-theme="dark"] .d2l-button-filter-item:hover {
   background-color: var(--alt-surface-3) !important;
 }
+/* The selected one is filled and edged with tungsten, a text colour on dark.
+   The edge isn't !important, so CourseLink's hover and focus edge still wins. */
 html[data-altera-theme="dark"] .d2l-button-filter-item.d2l-button-filter-selected {
   background-color: var(--alt-accent-tint) !important;
+  border-color: var(--alt-border-strong);
   color: var(--alt-accent) !important;
+}
+/* Its hover and focus ring is a white inset */
+html[data-altera-theme="dark"] .d2l-button-filter-item.d2l-button-filter-selected:is(:hover, :focus) {
+  box-shadow: inset 0 0 0 2px var(--alt-surface-2) !important;
 }
 
 /* Sign-in page (University of Guelph's own page, Bootstrap): the yellow
@@ -682,6 +774,11 @@ html[data-altera-theme="dark"] .d2l-chart svg text {
    CourseLink shows PDFs in pdf.js, which only goes dark when the OS is in
    dark mode. theme.js marks its frame "pdf"; map its variables to the palette.
    The document pages themselves stay as authored. */
+
+/* On the content page, the viewer's frame sits under a literal grey rule */
+html[data-altera-theme="dark"] .d2l-fileviewer-pdf-pdfjs {
+  border-top-color: var(--alt-border) !important;
+}
 
 html[data-altera-theme="pdf"] {
   color-scheme: dark;

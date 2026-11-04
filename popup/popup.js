@@ -10,7 +10,13 @@ alteraGetSettings().then((loaded) => {
   render();
 });
 chrome.storage.local.get("session", ({ session }) => renderSession(session));
-$("version").textContent = `v${chrome.runtime.getManifest?.().version ?? ""}`;
+// The version number is the popup's one way out: a quiet link to the source.
+const manifest = chrome.runtime.getManifest?.() ?? {};
+$("version").textContent = `v${manifest.version ?? ""}`;
+if (manifest.homepage_url) {
+  $("version").href = manifest.homepage_url;
+  $("version").setAttribute("aria-label", `Altera ${manifest.version} on GitHub`);
+}
 
 // Offer a shortcut to CourseLink only when we aren't already on it. (Tab URLs
 // are only visible to us for CourseLink pages, thanks to host permissions.)

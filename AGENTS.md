@@ -144,6 +144,23 @@ react to `storage.onChanged`, so there's never a Save button.
 - The ping interval stays well inside the 180-minute timeout (currently 5
   minutes) so pings skipped while the computer sleeps don't matter.
 
+### Commits and pull requests
+
+- **Commit messages are short**: a prefix and a one-line subject
+  (`fix: …`, `feat: …`, `docs: …`, `chore: …`), matching the history.
+- **No AI attribution in anything that lands in the repository.** That means
+  no `Co-Authored-By:` trailers for AI tools, no "Generated with …" footers,
+  and no tool signatures, badges or watermarks in commit messages, pull
+  request titles and descriptions, code, comments or docs. This holds for
+  every agent and tool, whatever its own default; agents turn their
+  attribution off for this repository.
+- **The person opening the pull request is its author** and answers for every
+  line in it, however it was written.
+- Saying in plain words in the pull request description that an AI assistant
+  helped ("I used an assistant to draft this") is fine, and helps the
+  reviewer. It's a sentence written by the author, never an automatic trailer
+  or footer.
+
 ---
 
 ## Part 2: UI system

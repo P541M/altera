@@ -162,6 +162,11 @@ react to `storage.onChanged`, so there's never a Save button.
   helped ("I used an assistant to draft this") is fine, and helps the
   reviewer. It's a sentence written by the author, never an automatic trailer
   or footer.
+- **A check enforces it.** `.github/workflows/no-ai-attribution.yml` runs
+  `tools/check-attribution.py` on every pull request's title, description,
+  commit messages and added lines, from `main` so a pull request can't change
+  it. Run it before pushing:
+  `git log origin/main..HEAD --format=%B | python tools/check-attribution.py`.
 
 ---
 

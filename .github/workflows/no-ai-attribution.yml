@@ -1,0 +1,42 @@
+# Fails a pull request whose title, description, commit messages or added
+# lines carry AI tool attribution (AGENTS.md, "Commits and pull requests").
+#
+# pull_request_target runs this file and tools/check-attribution.py from
+# main, so a pull request can't change the check that judges it. Nothing from
+# the pull request is checked out or run: its text is read through the API
+# with a read-only token.
+name: No AI attribution
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  no-ai-attribution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check the title, description, commits and added lines
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s\n%s\n' "$TITLE" "$BODY" > "$RUNNER_TEMP/description.txt"
+          gh api "repos/$REPO/pulls/$PR/commits" --paginate --jq '.[].commit.message' > "$RUNNER_TEMP/commits.txt"
+          gh api "repos/$REPO/pulls/$PR/files" --paginate --jq '.[].patch // empty' | sed -n 's/^+//p' > "$RUNNER_TEMP/added.txt"
+          status=0
+          for part in description commits added; do
+            echo "== $part =="
+            python3 tools/check-attribution.py < "$RUNNER_TEMP/$part.txt" || status=1
+          done
+          exit $status

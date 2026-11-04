@@ -721,12 +721,17 @@ html[data-altera-theme="dark"] .d2l-button-filter-item.d2l-button-filter-selecte
   box-shadow: inset 0 0 0 2px var(--alt-surface-2) !important;
 }
 
-/* Sign-in page (University of Guelph's own page, Bootstrap): the yellow
-   Sign In button keeps its dark label */
-html[data-altera-theme="dark"] .btn.btn-warning,
-html[data-altera-theme="dark"] .btn.btn-warning *,
-html[data-altera-theme="dark"] .btn.btn-warning:hover,
-html[data-altera-theme="dark"] .btn.btn-warning:focus {
+/* Sign-in page (University of Guelph's own page, Bootstrap). Its stylesheet
+   is same-origin, so layer 3 also rewrites the buttons' state rules
+   (`.btn-warning:visited { color: #000 }`, `.btn-default:hover`, the
+   :active:hover family) into light text at the same specificity as a plain
+   `.btn.btn-*` rule, and wins the tie. The label rules below carry an element
+   type, and a second state class for the pressed states, to outrank them. */
+
+/* The yellow Sign In button keeps its dark label */
+html[data-altera-theme="dark"] :is(a, button, input).btn.btn-warning,
+html[data-altera-theme="dark"] .btn.btn-warning:is(:active, .active):is(:hover, :focus, .focus),
+html[data-altera-theme="dark"] .btn.btn-warning * {
   color: #111418 !important;
 }
 /* Visitor Login is a light grey Bootstrap button; on the page surface it
@@ -736,6 +741,10 @@ html[data-altera-theme="dark"] .btn.btn-default,
 html[data-altera-theme="dark"] button#hamburger {
   background-color: var(--alt-surface-4) !important;
   border-color: var(--alt-control-border) !important;
+  color: var(--alt-text) !important;
+}
+html[data-altera-theme="dark"] :is(a, button, input).btn.btn-default,
+html[data-altera-theme="dark"] .btn.btn-default:is(:active, .active):is(:hover, :focus, .focus) {
   color: var(--alt-text) !important;
 }
 html[data-altera-theme="dark"] .btn.btn-default:hover,
@@ -748,6 +757,31 @@ html[data-altera-theme="dark"] button#hamburger:hover {
 /* Black glyph icons used in homepage widgets */
 html[data-altera-theme="dark"] img[src*="/glyphicons-"] {
   filter: invert(0.9);
+}
+
+/* Legacy icons are SVG files from Brightspace's CDN with a ferrite fill
+   (#494c4e) baked in, out of reach of any colour rule: in a ::before
+   (`content: url()`, the topic page's Download and Print buttons) or as a
+   container's background (the "You have viewed this topic" check). Inverting
+   with the hue turned back keeps any colour's hue and lands ferrite next to
+   --alt-icon. A container's text can't share the filter, so its own copy of
+   the icon is shrunk away and a ::before repaints it in the same place. */
+html[data-altera-theme="dark"] .d2l-icon-custom::before {
+  filter: invert(1) hue-rotate(180deg);
+}
+html[data-altera-theme="dark"] :is(.d2l-container-icon, .d2l-container-icon-inner) {
+  position: relative;
+  background-size: 0 0 !important;
+}
+html[data-altera-theme="dark"] :is(.d2l-container-icon, .d2l-container-icon-inner)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-position: inherit;
+  background-repeat: no-repeat;
+  filter: invert(1) hue-rotate(180deg);
+  pointer-events: none;
 }
 
 /* Progress bars and grade charts are SVG with hard-coded fills */

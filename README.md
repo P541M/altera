@@ -59,6 +59,12 @@ to track those down.
 
 ## Install
 
+Install [Altera for CourseLink](https://chromewebstore.google.com/detail/altera-for-courselink/mhkmaaoiedfemcbpplbnlchmfejkoloe)
+from the Chrome Web Store, then pin it from the puzzle-piece menu so its icon
+sits in the toolbar. Chrome keeps it up to date.
+
+To run it from source instead:
+
 1. Get the code from [GitHub](https://github.com/P541M/altera): **Code →
    Download ZIP** and unzip it, or clone it with
    `git clone https://github.com/P541M/altera.git`.
@@ -68,7 +74,7 @@ to track those down.
 5. Pin Altera from the puzzle-piece menu so its icon sits in the toolbar.
 
 CourseLink tabs that are already open pick Altera up immediately; there's no
-need to reload them. To update, pull (or download the ZIP again into the same
+need to reload them. To update a copy loaded from source, pull (or download the ZIP again into the same
 folder), then click the reload icon on Altera's card in `chrome://extensions`.
 
 ## Using Altera

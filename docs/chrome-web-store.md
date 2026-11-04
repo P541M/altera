@@ -1,8 +1,9 @@
 # Chrome Web Store
 
 Everything needed to publish Altera, ready to paste into the
-[developer dashboard](https://chrome.google.com/webstore/devconsole). Nothing
-has been submitted yet.
+[developer dashboard](https://chrome.google.com/webstore/devconsole). Altera
+is live at
+[Altera for CourseLink](https://chromewebstore.google.com/detail/altera-for-courselink/mhkmaaoiedfemcbpplbnlchmfejkoloe).
 
 ## Releasing a version
 
@@ -38,27 +39,13 @@ The same steps for the first upload and every update after it:
 
 **Description:**
 
-> A calmer, more comfortable CourseLink for University of Guelph students.
-> Altera is built to feel like part of CourseLink, so there are no banners,
-> badges or extra buttons on the page.
+Paste it as plain text, one line per paragraph.
+
+> A proper dark mode for the University of Guelph's CourseLink. It covers everything from grades and quizzes to the calendar and the PDF viewer, and it's built to feel like part of CourseLink, with no banners or extra buttons on the page.
 >
-> • A complete dark theme for CourseLink: courses, content, Dropbox,
-> grades, quizzes, discussions, calendar, the PDF viewer and the sign-in
-> page, on desktop and at phone widths. Every text colour meets WCAG AA
-> contrast.
-> • Stays signed in. CourseLink signs you out after 3 idle hours; Altera
-> keeps your session going while a CourseLink tab is open, using the same
-> request as CourseLink's own "Continue session" button. On a shared
-> computer, sign out when you're done or turn this off.
-> • University logos keep their colours, with lettering you can read on dark.
-> • Five accent colours, and a System option that follows your computer's
-> theme. Alt+Shift+D switches themes from anywhere.
+> Altera also keeps you signed in while a CourseLink tab is open, so you're not logged out mid-assignment. On a shared computer, turn that off in the popup. Pick an accent colour or follow your system theme, and switch anytime with Alt+Shift+D.
 >
-> Altera collects nothing and only ever talks to CourseLink. It's open source:
-> https://github.com/P541M/altera
->
-> Altera is an independent project and isn't affiliated with the University
-> of Guelph or D2L.
+> Altera collects nothing and only talks to CourseLink. It's open source at https://github.com/P541M/altera and isn't affiliated with the University of Guelph or D2L.
 
 ## Images
 
@@ -117,9 +104,3 @@ unrelated purposes, not used for creditworthiness).
   making it public.
 - **Regions:** all regions is fine, but students are in Canada.
 - **Support URL:** https://github.com/P541M/altera/issues
-
-## After the first publish
-
-- Add the store link to the README's Install section, above the Load
-  unpacked steps.
-- Updates follow "Releasing a version" above.

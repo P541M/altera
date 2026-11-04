@@ -40,6 +40,13 @@ extension is involved?*
 - **No build step, no dependencies, no framework.** The folder that's loaded
   is the source. Plain JavaScript, one IIFE per content script, globals only in
   `settings.js` (prefixed `altera`/`ALTERA_`).
+- **Chrome and Firefox 128+ run the same files.** `manifest.json` is
+  Chrome's plus `browser_specific_settings`; `tools/package.py` writes
+  Firefox's (an event page in place of the service worker). Use `chrome.*`,
+  which both provide, and don't rely on what only one browser allows:
+  Firefox lets content scripts read cross-origin stylesheets, and it orders
+  extension CSS after the page's, so `theme.css` wins `!important` ties
+  there that CourseLink's own sheets win in Chrome.
 - **A file belongs to one content-script world.** Chrome injects a file only
   once per frame, so listing it in both the `MAIN` and the isolated entries
   silently drops it from the second. The worlds talk through DOM events
@@ -278,11 +285,13 @@ The popup is Altera's one branded surface.
 
 - Every release raises `version` in `manifest.json`; the Chrome Web Store
   rejects an upload that doesn't.
-- The package is built only with `python tools/package.py`, which ships
-  just `manifest.json`, `src`, `popup` and `icons`, and refuses to build if
-  the manifest points at a missing file.
+- The packages are built only with `python tools/package.py`, which writes a
+  Chrome zip and a Firefox zip, ships just `manifest.json`, `src`, `popup`
+  and `icons` in each, and refuses to build if a manifest points at a
+  missing file.
 - The steps, listing text and privacy answers are in
-  [docs/chrome-web-store.md](docs/chrome-web-store.md).
+  [docs/chrome-web-store.md](docs/chrome-web-store.md) and
+  [docs/firefox-add-ons.md](docs/firefox-add-ons.md).
 
 ## Verification
 
@@ -303,6 +312,8 @@ A change is done when all of these pass:
      the surface they sit on
    - inside every frame on the page (homepage widgets, legacy tools such as
      Self Registration, the PDF viewer), which page-level checks don't reach
+   - in Firefox too (`dist/firefox/` from `python tools/package.py`), for a
+     change to the manifest, the background, the popup or a script's logic
 5. Contrast on the real page, not only the palette: CourseLink's CDN CSS
    still carries literal colours (a footer grey, a link blue) that pass on
    white and fail on dark. Measure text against its actual background.

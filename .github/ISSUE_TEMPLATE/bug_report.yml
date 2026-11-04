@@ -62,7 +62,7 @@ body:
     id: without
     attributes:
       label: Does it still happen with Altera turned off?
-      description: Turn Altera off in chrome://extensions and reload the page. This tells us whether it's Altera or CourseLink.
+      description: Turn Altera off in chrome://extensions (about:addons in Firefox) and reload the page. This tells us whether it's Altera or CourseLink.
       options:
         - "No, only with Altera on"
         - "Yes, it happens without Altera too"

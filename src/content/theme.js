@@ -245,12 +245,18 @@
       if (sheet.ownerNode?.id === "altera-remap") continue;
       let css = remapped.get(sheet);
       if (css === undefined) {
-        try {
-          const rules = visit(sheet.cssRules, []).join("\n");
-          const media = sheet.media.mediaText; // <link media="print">
-          css = media && media !== "all" && rules ? `@media ${media} { ${rules} }` : rules;
-        } catch {
-          css = ""; // Cross-origin (Brightspace CDN) sheets: covered by theme.css.
+        // Cross-origin (Brightspace CDN) sheets are covered by theme.css.
+        // Chrome won't let us read them; Firefox does, so skip them by origin
+        // or Firefox would remap rules theme.css already handles differently.
+        css = "";
+        if (!isCrossOrigin(sheet)) {
+          try {
+            const rules = visit(sheet.cssRules, []).join("\n");
+            const media = sheet.media.mediaText; // <link media="print">
+            css = media && media !== "all" && rules ? `@media ${media} { ${rules} }` : rules;
+          } catch {
+            // Unreadable for some other reason; leave it as it is.
+          }
         }
         remapped.set(sheet, css);
       }
@@ -265,6 +271,18 @@
     }
     const css = out.join("\n");
     if (style.textContent !== css) style.textContent = css;
+  }
+
+  // A sheet the page itself couldn't read: from another origin, fetched
+  // without CORS. window.origin, not location.origin, so about:blank frames
+  // count as CourseLink's.
+  function isCrossOrigin(sheet) {
+    if (!sheet.href || sheet.ownerNode?.hasAttribute?.("crossorigin")) return false;
+    try {
+      return new URL(sheet.href, location.href).origin !== window.origin;
+    } catch {
+      return false;
+    }
   }
 
   function groupPrelude(rule) {

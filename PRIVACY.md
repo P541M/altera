@@ -27,9 +27,9 @@ All of it stays in your browser:
 
 | What | Where |
 | --- | --- |
-| Your four settings (theme, accent, darken course files, keep me signed in) | Chrome's extension storage, synced between your own browsers if you use Chrome sync |
-| The result of the last keep-alive request (signed in, expired, and when) | Chrome's local extension storage |
-| Whether your system is set to dark mode, so the keyboard shortcut knows what "System" means | Chrome's local extension storage |
+| Your four settings (theme, accent, darken course files, keep me signed in) | The browser's extension storage, synced between your own browsers if you use Chrome sync or Firefox Sync |
+| The result of the last keep-alive request (signed in, expired, and when) | The browser's local extension storage |
+| Whether your system is set to dark mode, so the keyboard shortcut knows what "System" means | The browser's local extension storage |
 | A copy of your settings, and a few recoloured logo images | CourseLink's own storage in your browser, so pages appear in the right theme straight away |
 
 Removing Altera deletes its extension storage. The copy in CourseLink's

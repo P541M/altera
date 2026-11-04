@@ -12,7 +12,8 @@ before you put in the work.
 
 ## Before you start
 
-- **A Chromium browser:** Chrome, Edge or Brave.
+- **A Chromium browser:** Chrome, Edge or Brave. Firefox 128 or later works
+  too, for checking a change there.
 - **A University of Guelph CourseLink account** to test anything behind the
   sign-in. Without one you can still work on the sign-in page, the popup, the
   icon, the tools and the docs.
@@ -37,6 +38,12 @@ After editing, click the reload icon on Altera's card in
 `chrome://extensions`, then reload the CourseLink page. Open tabs pick up the
 new CSS and `theme.js` straight away, but `main-world.js` only refreshes on
 the next page load.
+
+To try a change in Firefox, run `python tools/package.py`, open
+`about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on…** and
+choose `dist/firefox/manifest.json`. After the next edit, build again
+and click **Reload**. Firefox needs its own manifest, which the script
+writes, so the source folder itself loads only in Chrome.
 
 ## Making a change
 

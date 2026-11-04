@@ -1,4 +1,7 @@
-importScripts("shared/settings.js");
+// Chrome runs this file as a service worker. Firefox runs it as an event page,
+// which has no importScripts; its manifest (written by tools/package.py) lists
+// settings.js before it instead.
+if (typeof importScripts === "function") importScripts("shared/settings.js");
 
 const COURSELINK = "https://courselink.uoguelph.ca";
 const ALARM = "altera-keepalive";
@@ -36,6 +39,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 });
+
+// Firefox lets people withhold CourseLink access and grant it later (the
+// popup asks); open tabs then need the scripts, as after an install.
+chrome.permissions.onAdded.addListener(() => injectIntoOpenTabs());
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && changes.keepAlive) {

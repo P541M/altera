@@ -7,7 +7,7 @@
 <p align="center"><strong>CourseLink, refined.</strong></p>
 
 <p align="center">
-  A Chrome extension for the University of Guelph's CourseLink.<br />
+  A Chrome and Firefox extension for the University of Guelph's CourseLink.<br />
   It's built to feel like part of CourseLink: no banners, badges or extra buttons on the page.
 </p>
 
@@ -63,7 +63,7 @@ Install [Altera for CourseLink](https://chromewebstore.google.com/detail/altera-
 from the Chrome Web Store, then pin it from the puzzle-piece menu so its icon
 sits in the toolbar. Chrome keeps it up to date.
 
-To run it from source instead:
+### From source (Chrome)
 
 1. Get the code from [GitHub](https://github.com/P541M/altera): **Code →
    Download ZIP** and unzip it, or clone it with
@@ -76,6 +76,22 @@ To run it from source instead:
 CourseLink tabs that are already open pick Altera up immediately; there's no
 need to reload them. To update a copy loaded from source, pull (or download the ZIP again into the same
 folder), then click the reload icon on Altera's card in `chrome://extensions`.
+
+### Firefox
+
+Altera runs in Firefox 128 or later. It isn't listed on addons.mozilla.org
+yet; until it is, you can load it for one session:
+
+1. Get the code (step 1 above) and build it with `python tools/package.py`.
+2. Open `about:debugging#/runtime/this-firefox` and click **Load Temporary
+   Add-on…**.
+3. Choose `dist/firefox/manifest.json`.
+4. Pin Altera from the puzzle-piece menu so its icon sits in the toolbar.
+
+Firefox removes a temporary add-on when it closes. Firefox also lets you turn
+off an add-on's access to a site in `about:addons`. If CourseLink access is
+off, Altera does nothing, and the popup says "Altera needs access to
+CourseLink" with an **Allow** button.
 
 ## Using Altera
 
@@ -90,7 +106,8 @@ Everything lives in the toolbar popup. Nothing is added to CourseLink itself.
 | **Darken course files** | Also darkens the HTML pages instructors upload. Turn it off if one looks wrong. |
 
 **Alt+Shift+D** switches between light and dark from any tab. You can rebind it
-at `chrome://extensions/shortcuts`.
+at `chrome://extensions/shortcuts`, or in Firefox from the gear menu in
+`about:addons` (**Manage Extension Shortcuts**).
 
 ## What it changes
 
@@ -102,8 +119,9 @@ at `chrome://extensions/shortcuts`.
   phone widths.
 - **No surprise sign-outs.** CourseLink ends a session after 3 idle hours.
   While a CourseLink tab is open, Altera makes the same request as CourseLink's
-  own "Continue session" button every 5 minutes. It also stops Chrome's Memory
-  Saver from discarding CourseLink tabs.
+  own "Continue session" button every 5 minutes. It also stops the browser
+  (Chrome's Memory Saver, Firefox's tab unloading) from discarding
+  CourseLink tabs.
 - **Logos in true colour.** The CourseLink and University of Guelph wordmarks,
   and University logos placed on course pages, get light lettering while the
   crest keeps its colours.
@@ -307,7 +325,9 @@ same palette as the page in dark mode.
   disabled (and say why on hover) in light mode, where accents don't apply.
 - **Session status** is a 7px dot (green when active, amber when waiting,
   red on errors) next to a plain-language line ("Signed in · refreshed 2 min
-  ago"). That line updates itself while the popup is open.
+  ago"). That line updates itself while the popup is open. If the browser has
+  CourseLink access turned off, it says "Altera needs access to CourseLink"
+  instead, with an **Allow** link that asks the browser for it.
 - **The version number** in the footer is the popup's one link out: it opens
   this repository, taken from the manifest's `homepage_url`. It's muted like
   the rest of the footer and underlines on hover.
@@ -338,7 +358,8 @@ python tools/make-icons.py preview.png  # also writes a light/dark toolbar previ
 ```
 manifest.json
 src/
-  background.js         Service worker: keep-alive alarm, shortcut, injection into open tabs
+  background.js         Background (Chrome: service worker, Firefox: event page):
+                        keep-alive alarm, shortcut, injection into open tabs
   shared/settings.js    Defaults and storage helpers (popup, worker and content scripts)
   content/
     main-world.js       Page world: dark sheet for every shadow root, logo recolouring,
@@ -354,11 +375,15 @@ tools/
   check-tokens.js       Every var(--alt-*) the code uses is defined
   check-attribution.py  No AI tool attribution in commits or pull requests
   make-icons.py         Icon generator
-  package.py            Builds the zip for the Chrome Web Store or a release
+  package.py            Builds the Chrome and Firefox zips for the stores or a release
 ```
 
 There's no build step, no dependencies and no framework. The folder you load
-is the source.
+is the source. The one exception is Firefox's manifest. Firefox doesn't run
+extension service workers, and Chrome flags a background page as an error,
+so `manifest.json` is Chrome's (plus Firefox's add-on ID) and
+`tools/package.py` writes the Firefox copy, which runs `settings.js` and then
+`background.js` as an event page.
 
 ### Load order
 
@@ -547,7 +572,9 @@ browser updates), `background.js` injects the same CSS and scripts into every
 open CourseLink tab (the `scripting` permission), so they switch over without
 a reload. It first asks each tab whether it already runs the current version.
 Only current scripts can answer, so a tab that loaded after the update isn't
-injected twice, which would double its keep-alive pings.
+injected twice, which would double its keep-alive pings. The same happens when
+CourseLink access is granted later (Firefox lets people turn it off and on in
+`about:addons`, and Chrome can limit it to "on click").
 
 ### Keep-alive
 
@@ -604,7 +631,9 @@ content scripts all load.
 ### Making a change
 
 1. Edit the files. There's nothing to build.
-2. In `chrome://extensions`, click the reload icon on Altera's card.
+2. In `chrome://extensions`, click the reload icon on Altera's card. In
+   Firefox, run `python tools/package.py` and click **Reload** on Altera in
+   `about:debugging`.
 3. Reload a CourseLink tab, or just navigate. (Already-open tabs get the new CSS
    and `theme.js` on reload of the extension, but `main-world.js` only
    refreshes on the next page load.)
@@ -633,13 +662,14 @@ node tools/check-contrast.js --verbose  # print each ratio
 node tools/check-tokens.js              # every var(--alt-*) used is defined
 git log origin/main..HEAD --format=%B | python tools/check-attribution.py   # no AI attribution
 python tools/make-icons.py              # regenerate the icons (needs Pillow)
-python tools/package.py                 # build dist/altera-<version>.zip
+python tools/package.py                 # build the Chrome and Firefox zips, and dist/firefox/
 ```
 
 ### Releasing
 
 Publishing steps, the store listing text, permission justifications and the
-screenshot list are in [docs/chrome-web-store.md](docs/chrome-web-store.md).
+screenshot list are in [docs/chrome-web-store.md](docs/chrome-web-store.md)
+and, for Firefox, [docs/firefox-add-ons.md](docs/firefox-add-ons.md).
 Every release raises `version` in `manifest.json` and is built with
 `python tools/package.py`.
 
@@ -671,6 +701,11 @@ pull request template walks through it:
 - **Phone widths** (390px), including the burger menu and the nav trays.
 - **Flicker**: page loads and theme switches were recorded frame by frame
   (Chrome DevTools screencast) and checked for any light frame.
+- **Firefox** (159, with the packaged zip): the sign-in page, homepage,
+  Content, a PDF topic, Grades, Discussions, Calendar, Dropbox and Quizzes were
+  compared with Chrome element by element (backgrounds, text, borders,
+  gradients and shadows, through shadow roots and frames), plus the popup,
+  the shortcut, keep-alive and turning CourseLink access off and on.
 - Nothing is ever submitted, posted, sent or started during testing.
 
 ---
@@ -680,7 +715,9 @@ pull request template walks through it:
 - **Guelph only.** Altera is tuned for the University of Guelph's CourseLink
   and untested on other schools' Brightspace sites (see
   [Built for Guelph](#built-for-guelph)).
-- **Chrome's own dialogs** ("Leave site? Changes you made may not be saved")
+- **Firefox 128 or later.** Older versions can't run the page-world script
+  (`world: "MAIN"`) that styles CourseLink's shadow DOM.
+- **The browser's own dialogs** ("Leave site? Changes you made may not be saved")
   are drawn by the browser, not the page. They follow your OS theme, and no
   extension can restyle them.
 - **External tools and embeds** (publisher tools, H5P activities, video

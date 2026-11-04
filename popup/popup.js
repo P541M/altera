@@ -1,15 +1,30 @@
 const $ = (id) => document.getElementById(id);
 const systemDark = matchMedia("(prefers-color-scheme: dark)");
 const ACCENT_NAMES = { blue: "Blue", gryphon: "Gryphon red", gold: "Gryphon gold", violet: "Violet", mint: "Mint" };
+const COURSELINK_ACCESS = { origins: ["https://courselink.uoguelph.ca/*"] };
 
 let settings = { ...ALTERA_DEFAULTS };
 let lastSession;
+let hasAccess = true;
 
 alteraGetSettings().then((loaded) => {
   settings = loaded;
   render();
 });
 chrome.storage.local.get("session", ({ session }) => renderSession(session));
+// Firefox lets people take back CourseLink access in about:addons (and Chrome
+// can limit it to "on click"); without it Altera does nothing, so say so.
+const checkAccess = async () => {
+  try {
+    hasAccess = await chrome.permissions.contains(COURSELINK_ACCESS);
+  } catch {
+    hasAccess = true;
+  }
+  render();
+};
+checkAccess();
+chrome.permissions?.onAdded.addListener(checkAccess);
+chrome.permissions?.onRemoved.addListener(checkAccess);
 // The version number is the popup's one way out: a quiet link to the source.
 const manifest = chrome.runtime.getManifest?.() ?? {};
 $("version").textContent = `v${manifest.version ?? ""}`;
@@ -71,6 +86,15 @@ $("pingNow").addEventListener("click", async () => {
   }
 });
 
+$("allowAccess").addEventListener("click", async () => {
+  try {
+    await chrome.permissions.request(COURSELINK_ACCESS);
+  } catch {
+    // The prompt was dismissed or couldn't open; the line keeps asking.
+  }
+  checkAccess();
+});
+
 // ----- Rendering -----
 
 function render() {
@@ -91,7 +115,8 @@ function render() {
   swatches.title = dark ? "" : "Accent colours apply in dark mode";
   for (const input of swatches.querySelectorAll("input")) input.disabled = !dark;
   $("darkContent").disabled = !dark;
-  $("pingNow").hidden = !settings.keepAlive;
+  $("pingNow").hidden = !settings.keepAlive || !hasAccess;
+  $("allowAccess").hidden = hasAccess;
   renderSession();
 }
 
@@ -99,6 +124,11 @@ function renderSession(session = lastSession) {
   lastSession = session;
   const row = document.querySelector(".status-row");
   const text = $("sessionStatus");
+  if (!hasAccess) {
+    row.dataset.state = "no-access";
+    text.textContent = "Altera needs access to CourseLink";
+    return;
+  }
   if (!settings.keepAlive) {
     row.dataset.state = "disabled";
     text.textContent = "Off. CourseLink signs you out after 3 idle hours";

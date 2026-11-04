@@ -13,19 +13,20 @@ The same steps for the first upload and every update after it:
 2. Raise `version` in `manifest.json` (for example `2.0.0` → `2.0.1`). The
    store rejects an upload whose version isn't higher than the last one.
 3. Run the checks and the verification list in [AGENTS.md](../AGENTS.md).
-4. Build the zip:
+4. Build the zips:
 
    ```sh
-   python tools/package.py   # writes dist/altera-<version>.zip
+   python tools/package.py   # writes dist/altera-<version>-chrome.zip (and the Firefox one)
    ```
 
-5. Unzip it into an empty folder, load that folder with **Load unpacked** and
-   check it works. That's exactly what users will get.
+5. Unzip the Chrome zip into an empty folder, load that folder with **Load
+   unpacked** and check it works. That's exactly what users will get.
 6. Upload the zip in the dashboard and submit it for review. Review usually
    takes from a few hours to a few days; once it passes, Chrome updates
    everyone automatically.
-7. Tag the release (`git tag v2.0.1 && git push --tags`) and attach the same
-   zip to a GitHub release, for people who install by hand.
+7. Submit the Firefox zip too ([firefox-add-ons.md](firefox-add-ons.md)),
+   then tag the release (`git tag v2.0.1 && git push --tags`) and attach both
+   zips to a GitHub release, for people who install by hand.
 
 ## Store listing
 

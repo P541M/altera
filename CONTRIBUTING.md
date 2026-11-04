@@ -87,7 +87,12 @@ to understand every line of it. Turn off any attribution it adds: no
 other tool watermarks in commits, pull requests, code or docs. If an assistant
 helped, you can say so in your own words in the pull request description.
 Coding agents pick these rules up from [AGENTS.md](AGENTS.md) (Claude Code
-through [CLAUDE.md](CLAUDE.md)).
+through [CLAUDE.md](CLAUDE.md)). A check on every pull request flags any
+attribution it finds; you can run the same check before pushing:
+
+```sh
+git log origin/main..HEAD --format=%B | python tools/check-attribution.py
+```
 
 ## Pull requests
 

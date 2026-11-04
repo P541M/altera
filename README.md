@@ -294,6 +294,7 @@ Places where the token swap alone wasn't enough, and what was done:
 | Pop-up windows (Email) | Light title gradient, pale button bar, white recipient fields and chips with a white text-shadow | Flat surfaces, input-coloured fields, dark chips, no emboss |
 | Tables | Header shading leaked onto data rows that are first in their own `tbody` | Shaded only for real column headers (`thead`, `scope="col"`), verified header by header against light mode |
 | Content sidebar | The selected module's pointer is a white SVG triangle | Redrawn as a mask in the panel colour |
+| Content topic side panel | The panel that slides out over a topic is hard-coded white with a `#ced0cf` edge; its scrollbar thumb is translucent black; topic titles are flat links that the dark link colour turned blue; the viewed checks are dark `<img>` SVGs | Surface panel with border-token edges, a corundum thumb, titles in the text colour (accent on hover, as in light mode), checks inverted like the other legacy icons |
 | Burger menu (phone widths) | Panel hard-coded white, and the scrim used the text colour | Surface panel, black scrim |
 | Grade scheme chips | Inline pastel backgrounds that carry meaning | A deep tint of the same hue (see [Inline styles](#layer-4-inline-styles)) |
 | Sign-in page | The yellow Sign In button's label turned light; Visitor Login lost its grey fill; the phone-width menu button is an unstyled browser button | Sign In keeps its dark label (`#111418`); Visitor Login and the menu button become secondary buttons with a 3:1 edge |

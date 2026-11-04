@@ -209,6 +209,14 @@ html[data-altera-theme="dark"] a:hover,
 html[data-altera-theme="dark"] .d2l-link:hover {
   color: var(--alt-accent-hover);
 }
+/* Flat links (topic titles in the Content side panel) take the colour of the
+   text around them, and only turn link-coloured on hover and focus */
+html[data-altera-theme="dark"] :is(.d2l-link, .d2l-linkheading-link).d2l-link-flat {
+  color: inherit;
+}
+html[data-altera-theme="dark"] :is(.d2l-link, .d2l-linkheading-link).d2l-link-flat:is(:hover, :focus) {
+  color: var(--alt-accent-hover);
+}
 
 html[data-altera-theme="dark"] h1,
 html[data-altera-theme="dark"] h2,
@@ -271,11 +279,33 @@ html[data-altera-theme="dark"] .d2l-twopanelselector-main,
 html[data-altera-theme="dark"] .d2l-column-side,
 html[data-altera-theme="dark"] .d2l-column-side-bg,
 html[data-altera-theme="dark"] .d2l-column-flip-side,
-html[data-altera-theme="dark"] .d2l-page-collapsepane-handle,
 html[data-altera-theme="dark"] .d2l-page-collapsepane-container {
   background-color: var(--alt-surface) !important;
   border-color: var(--alt-border) !important;
   color: var(--alt-text);
+}
+/* The side panel that slides out over a Content topic, and its handle: white
+   with a literal #ced0cf top and left edge in the CDN stylesheet, mica on the
+   other sides */
+html[data-altera-theme="dark"] .d2l-page-collapsepane-handle,
+html[data-altera-theme="dark"] .d2l-page-collapsepane-content,
+html[data-altera-theme="dark"] .d2l-page-collapsepane-content-inner {
+  background-color: var(--alt-surface) !important;
+  border-color: var(--alt-border-strong) !important;
+  color: var(--alt-text);
+}
+html[data-altera-theme="dark"] .d2l-page-collapsepane-content {
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+/* Its scroller draws the thumb in translucent black, invisible on dark */
+html[data-altera-theme="dark"] .d2l-scrollbar::-webkit-scrollbar:hover {
+  background-color: var(--alt-surface-3);
+}
+html[data-altera-theme="dark"] .d2l-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--d2l-color-corundum);
+}
+html[data-altera-theme="dark"] .d2l-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--alt-faint);
 }
 /* Collapsible sections (Content modules, etc.): the body is white in the
    Brightspace CDN stylesheet, which theme.js can't read */
@@ -762,10 +792,12 @@ html[data-altera-theme="dark"] img[src*="/glyphicons-"] {
 /* Legacy icons are SVG files from Brightspace's CDN with a ferrite fill
    (#494c4e) baked in, out of reach of any colour rule: in a ::before
    (`content: url()`, the topic page's Download and Print buttons) or as a
-   container's background (the "You have viewed this topic" check). Inverting
+   container's background (the "You have viewed this topic" check), or as a
+   plain <img> (the same check in the Content side panel). Inverting
    with the hue turned back keeps any colour's hue and lands ferrite next to
    --alt-icon. A container's text can't share the filter, so its own copy of
    the icon is shrunk away and a ::before repaints it in the same place. */
+html[data-altera-theme="dark"] img[src*="/lib/bsi/"][src*="/images/tier"],
 html[data-altera-theme="dark"] .d2l-icon-custom::before {
   filter: invert(1) hue-rotate(180deg);
 }

@@ -28,3 +28,4 @@ From the verification list in [AGENTS.md](https://github.com/P541M/altera/blob/m
 - [ ] No flash when loading the page or switching themes
 - [ ] Didn't submit, post, send, save or start anything on CourseLink while testing
 - [ ] README and AGENTS.md updated if this changes how something works
+- [ ] No AI co-author trailers, "Generated with …" footers or other tool watermarks in the commits or this description

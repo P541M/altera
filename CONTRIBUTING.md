@@ -79,6 +79,16 @@ feat: add an accent colour
 docs: explain the keep-alive request
 ```
 
+## Using AI assistants
+
+You're welcome to use one, but you're the author of what you submit and need
+to understand every line of it. Turn off any attribution it adds: no
+`Co-Authored-By` trailers for AI tools, no "Generated with …" footers and no
+other tool watermarks in commits, pull requests, code or docs. If an assistant
+helped, you can say so in your own words in the pull request description.
+Coding agents pick these rules up from [AGENTS.md](AGENTS.md) (Claude Code
+through [CLAUDE.md](CLAUDE.md)).
+
 ## Pull requests
 
 Open the pull request against `main` and fill in the template. Include before

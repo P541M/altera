@@ -47,9 +47,11 @@ extension is involved?*
 - **Permissions stay minimal:** `storage`, `alarms`, `scripting`, and host
   access to `https://courselink.uoguelph.ca/*` only. Adding one needs a reason
   in the README's Privacy section in the same change.
-- **Altera talks only to CourseLink**, and only to make the keep-alive request. No
-  analytics, no remote code, no third-party requests. Never log or store
-  tokens, cookies or page content.
+- **Altera talks only to CourseLink:** the keep-alive request, and loading
+  CourseLink's logo images again to recolour them. No analytics, no remote
+  code, no third-party requests. Never log or store tokens, cookies or page
+  content. [PRIVACY.md](PRIVACY.md) promises this to users; a change that
+  affects it updates that file too.
 
 ### Scoping
 
@@ -234,6 +236,9 @@ The popup is Altera's one branded surface.
   spin on refresh. All of it is off under `prefers-reduced-motion`.
 - **Accessibility:** radio groups for theme and accent, `aria-live` on the
   status line, visible `:focus-visible` rings, and labels on icon-only buttons.
+- **One link out:** the footer's version number opens the repository
+  (`homepage_url` from the manifest). The popup gets no other external links,
+  badges or calls to action.
 
 ### Icon
 
@@ -246,6 +251,16 @@ The popup is Altera's one branded surface.
   (check the preview the script writes).
 
 ---
+
+## Releases
+
+- Every release raises `version` in `manifest.json`; the Chrome Web Store
+  rejects an upload that doesn't.
+- The package is built only with `python tools/package.py`, which ships
+  just `manifest.json`, `src`, `popup` and `icons`, and refuses to build if
+  the manifest points at a missing file.
+- The steps, listing text and privacy answers are in
+  [docs/chrome-web-store.md](docs/chrome-web-store.md).
 
 ## Verification
 

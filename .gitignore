@@ -12,7 +12,8 @@ __pycache__/
 # Icon previews from `python tools/make-icons.py preview.png`
 preview.png
 
-# Packaged builds for a release or the Chrome Web Store
+# Packaged builds for a release or the Chrome Web Store (tools/package.py)
+dist/
 *.zip
 *.crx
 *.pem

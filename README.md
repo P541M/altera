@@ -299,6 +299,9 @@ same palette as the page in dark mode.
 - **Session status** is a 7px dot (green when active, amber when waiting,
   red on errors) next to a plain-language line ("Signed in · refreshed 2 min
   ago"). That line updates itself while the popup is open.
+- **The version number** in the footer is the popup's one link out: it opens
+  this repository, taken from the manifest's `homepage_url`. It's muted like
+  the rest of the footer and underlines on hover.
 - Motion is limited to feedback: switches slide (140ms) and the refresh icon
   spins once. Both are off under `prefers-reduced-motion`.
 
@@ -341,6 +344,7 @@ tools/
   check-contrast.js     WCAG check of every colour pairing
   check-tokens.js       Every var(--alt-*) the code uses is defined
   make-icons.py         Icon generator
+  package.py            Builds the zip for the Chrome Web Store or a release
 ```
 
 There's no build step, no dependencies and no framework. The folder you load
@@ -617,7 +621,15 @@ node tools/check-contrast.js            # every pairing, from theme.css and popu
 node tools/check-contrast.js --verbose  # print each ratio
 node tools/check-tokens.js              # every var(--alt-*) used is defined
 python tools/make-icons.py              # regenerate the icons (needs Pillow)
+python tools/package.py                 # build dist/altera-<version>.zip
 ```
+
+### Releasing
+
+Publishing steps, the store listing text, permission justifications and the
+screenshot list are in [docs/chrome-web-store.md](docs/chrome-web-store.md).
+Every release raises `version` in `manifest.json` and is built with
+`python tools/package.py`.
 
 ### How it was tested
 
@@ -670,9 +682,11 @@ pull request template walks through it:
 
 ## Privacy
 
-Altera runs only on `courselink.uoguelph.ca`. It talks to nothing except
-CourseLink itself, and only to make the keep-alive request. There's no analytics and no
-remote code. It stores:
+Altera runs only on `courselink.uoguelph.ca` and talks to nothing except
+CourseLink itself: the keep-alive request, and loading CourseLink's logo
+images again (usually from the browser cache) to recolour them. There's no
+analytics and no remote code. The full policy is in [PRIVACY.md](PRIVACY.md).
+It stores:
 
 - your four settings (`chrome.storage.sync`)
 - the last keep-alive result, and whether your system is in dark mode

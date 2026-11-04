@@ -281,6 +281,9 @@ Places where the token swap alone wasn't enough, and what was done:
 | Profile cards (author names) | White card; its pointer is a white PNG sprite | Floating surface; the pointer redrawn as the same triangle in the card's colour |
 | Legacy tables (Self Registration) | Cells coloured with the old `bgcolor` attribute | Tagged like inline styles (see [Inline styles](#layer-4-inline-styles)) |
 | PDF viewer toolbar | CourseLink's View as Text and Download are unstyled bevelled buttons; its fullscreen button has no icon (a solid square in both themes) | Flat secondary buttons; pdf.js's own presentation-mode icon |
+| Calendar grids (Day, Week, Month) | Its stylesheet hard-codes the gridlines, the weekend and today shading and the bar under the all-day row; the header above the view switcher ends in a `#ccc` rule | Border tokens for the lines, one and two steps up from the surface for weekends and today |
+| Calendar events | Each calendar's colour comes from a class D2L generates per page: pastels, with `#333` text that turned into link blue | A deep tint of the calendar's hue with light text; the colour dots take the same hue at 62% lightness (see [Generated stylesheets](#layer-3-generated-stylesheets)) |
+| View switchers (Calendar) | The selected button is filled and edged with tungsten (a text colour on dark), with a white inset ring on hover and focus | Accent tint fill, border-coloured edge, ring in the bar's colour; CourseLink's focus edge still shows |
 
 ### The popup
 
@@ -440,6 +443,7 @@ under the theme attribute:
 | | < 0.4 | `--d2l-color-tungsten` (text-2) |
 | | < 0.5 | `--alt-text-3` |
 | Background | Luminance > 0.85 | `--alt-surface` |
+| | Any colour on a single generated class (`.d2l_3_4_430`) | Also `--altera-tint`: `hsl(<same hue> 42% 21%)`, or `--alt-surface-3` for a grey. Only the Calendar's event chips and colour dots use it. |
 | Border (each side) | Luminance > 0.7 | `--alt-border` |
 | Gradient | Any stop with luminance > 0.85 | `background-image: none` |
 
@@ -655,6 +659,9 @@ pull request template walks through it:
 - **Automated audit** of each state, through every shadow root: any background
   lighter than mid-grey, any text darker than mid-grey, and any gradient. Each
   gradient was compared with the same page with the theme off.
+- **Light lines**, which the area audit can't see: every border, rule, thin
+  bar and box-shadow lighter than mid-grey, on every page and in every
+  Calendar view (Agenda, Day, Week, Month, List).
 - **Phone widths** (390px), including the burger menu and the nav trays.
 - **Flicker**: page loads and theme switches were recorded frame by frame
   (Chrome DevTools screencast) and checked for any light frame.

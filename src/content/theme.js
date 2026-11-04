@@ -11,6 +11,7 @@
   const root = document.documentElement;
   const MIRROR_KEY = "altera.settings";
   const P = 'html[data-altera-theme="dark"]';
+  const GENERATED_CLASS = /^\.d2l_\d+_\d+_\d+$/; // .d2l_3_13_579 (remapSheets)
 
   // Instructor-uploaded files (HTML topics in the content viewer) are served
   // from /content/, and University-authored pages shown in courses from
@@ -217,6 +218,9 @@
         const bg = s.getPropertyValue("background-color");
         const bgL = !bg.includes("var(") ? luminance(bg) : null;
         if (bgL !== null && bgL > 0.85) decls.push("background-color: var(--alt-surface) !important");
+        // Calendar events get their calendar's colour from a generated class
+        // like this; theme.css paints them a deep tint of the same hue.
+        if (bgL !== null && GENERATED_CLASS.test(rule.selectorText)) decls.push(`--altera-tint: ${deepTint(parseColor(bg))}`);
 
         // Fades to white (overflow fades, header sheens) read as bands on dark.
         const image = s.getPropertyValue("background-image");
@@ -316,8 +320,8 @@
         else if (light && (max - Math.min(r, g, b)) / max < 0.03) el.setAttribute("data-altera-bg", "neutral");
         else if (light) {
           // Keep the hue, which often means something (grade scheme
-          // colours), as a deep tint that light text reads well on.
-          el.style.setProperty("--altera-tint", `hsl(${hue(r, g, b)} 42% 21%)`);
+          // colours).
+          el.style.setProperty("--altera-tint", deepTint(bg));
           el.setAttribute("data-altera-bg", "tint");
         }
       }
@@ -354,6 +358,14 @@
 
   function relativeLuminance({ r, g, b }) {
     return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  }
+
+  // A colour as a deep tint of the same hue, which light text reads well on.
+  // Greys have no hue to keep.
+  function deepTint({ r, g, b }) {
+    const max = Math.max(r, g, b);
+    if (!max || (max - Math.min(r, g, b)) / max < 0.03) return "var(--alt-surface-3)";
+    return `hsl(${hue(r, g, b)} 42% 21%)`;
   }
 
   function hue(r, g, b) {

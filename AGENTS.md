@@ -297,7 +297,10 @@ A change is done when all of these pass:
    - light theme, which must be pixel-identical to CourseLink without Altera
    - 390px width, including the burger menu if navigation is involved
    - every menu, dropdown, dialog, tab and hover state on the page, not just
-     its resting state
+     its resting state, and every view a tool offers (the Calendar's Day,
+     Week, Month and List, not only Agenda)
+   - lines as well as surfaces: borders, rules and thin bars lighter than
+     the surface they sit on
    - inside every frame on the page (homepage widgets, legacy tools such as
      Self Registration, the PDF viewer), which page-level checks don't reach
 5. Contrast on the real page, not only the palette: CourseLink's CDN CSS

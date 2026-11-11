@@ -6,31 +6,38 @@
  * sets that attribute. Styles for web components (inside shadow roots) live
  * in main-world.js.
  *
- * Palette: a blue-leaning graphite that follows Brightspace's own cool greys,
- * in five elevation steps. No gradients or effects beyond what CourseLink
- * itself draws. Every text/background pairing below meets WCAG AA
- * (4.5:1 for text, 3:1 for control borders and focus rings) on every surface,
- * including each accent's highlight tint.
+ * Palette: two dark styles. Graphite leans blue, following Brightspace's own
+ * cool greys; Black is the same on near-black, neutral surfaces. No
+ * gradients or effects beyond what CourseLink itself draws. Every
+ * text/background pairing below meets WCAG AA (4.5:1 for text, 3:1 for
+ * control borders and focus rings) on every surface of both, including each
+ * accent's highlight tint.
  */
 
 /* ---------- Palette ---------- */
 
-html[data-altera-theme="dark"] {
-  color-scheme: dark;
-
+/* Graphite, the default dark style. Declared for every mode, so the PDF
+   viewer's variables can use the tokens too; nothing reads them in light
+   mode, where the attribute is absent. */
+html[data-altera-theme] {
   /* Elevation, lowest to highest */
   --alt-bg: #0d1015; /* page */
   --alt-surface: #151920; /* nav, widgets, panels */
   --alt-surface-2: #1b2028; /* cards, table headers, subtle fills */
   --alt-surface-3: #232932; /* hover */
   --alt-surface-4: #2c333d; /* secondary buttons, pressed */
+  --alt-surface-5: #353d48; /* a hovered secondary button */
   --alt-surface-float: #1e232b; /* menus, dropdowns, dialogs */
   --alt-input: #10141a; /* inset fields */
+  --alt-tooltip: #39404b; /* under a tooltip's white text */
+  --alt-backdrop: #05070a; /* dims the page behind a dialog */
 
   /* Lines */
   --alt-border: #262c35; /* decorative dividers */
   --alt-border-strong: #343b46; /* card and popover edges */
+  --alt-border-heavy: #4a525e; /* the strongest rules, scrollbar thumbs, faint icons */
   --alt-control-border: #6b7584; /* form controls, >= 3:1 on every surface */
+  --alt-control-border-hover: #8a94a1;
 
   /* Text, primary to faint */
   --alt-text: #e8ecf1;
@@ -50,6 +57,34 @@ html[data-altera-theme="dark"] {
   --alt-error: #ff8080;
   --alt-success: #5ed38c;
   --alt-warning: #f6ad62;
+}
+
+/* Black, the other dark style: the same text, accent and status colours on
+   near-black surfaces without the blue cast, a few shades apart. Inputs can't
+   sit below a black page, so they share its colour. */
+html[data-altera-theme][data-altera-style="black"] {
+  --alt-bg: #000000;
+  --alt-surface: #0b0b0d;
+  --alt-surface-2: #111114;
+  --alt-surface-3: #1a1a1e;
+  --alt-surface-4: #222226;
+  --alt-surface-5: #2b2b30;
+  --alt-surface-float: #151518;
+  --alt-input: #000000;
+  --alt-tooltip: #2e2e33;
+  --alt-backdrop: #000000;
+
+  --alt-border: #1c1c20;
+  --alt-border-strong: #2a2a2f;
+  --alt-border-heavy: #3d3d44;
+  --alt-control-border: #70707a;
+  --alt-control-border-hover: #8e8e98;
+}
+
+/* ---------- Brightspace variables ---------- */
+
+html[data-altera-theme="dark"] {
+  color-scheme: dark;
 
   /* Brightspace neutral scale, mapped light -> dark by role. Legacy pages and
      older components read these directly. */
@@ -57,7 +92,7 @@ html[data-altera-theme="dark"] {
   --d2l-color-sylvite: var(--alt-surface-3);
   --d2l-color-gypsum: var(--alt-surface-4);
   --d2l-color-mica: var(--alt-border-strong);
-  --d2l-color-corundum: #4a525e;
+  --d2l-color-corundum: var(--alt-border-heavy);
   --d2l-color-chromite: var(--alt-faint);
   --d2l-color-galena: var(--alt-text-3);
   --d2l-color-tungsten: var(--alt-text-2);
@@ -114,21 +149,21 @@ html[data-altera-theme="dark"] {
   --d2l-theme-background-color-sunken: var(--alt-bg);
   --d2l-theme-background-color-interactive-faint-default: var(--alt-surface-2);
   --d2l-theme-background-color-interactive-faint-hover: var(--alt-surface-3);
-  --d2l-theme-background-color-interactive-faint-disabled: #1b202880;
+  --d2l-theme-background-color-interactive-faint-disabled: color-mix(in srgb, var(--alt-surface-2) 50%, transparent);
   --d2l-theme-background-color-interactive-highlighted: var(--alt-accent-tint);
   --d2l-theme-background-color-interactive-primary-default: var(--alt-accent);
   --d2l-theme-background-color-interactive-primary-hover: var(--alt-accent-hover);
   --d2l-theme-background-color-interactive-secondary-default: var(--alt-surface-4);
-  --d2l-theme-background-color-interactive-secondary-hover: #353d48;
+  --d2l-theme-background-color-interactive-secondary-hover: var(--alt-surface-5);
   --d2l-theme-background-color-interactive-tertiary-hover: var(--alt-surface-3);
   --d2l-theme-background-color-interactive-translucent-hover: var(--alt-accent);
-  --d2l-theme-backdrop-background-color: #05070a;
+  --d2l-theme-backdrop-background-color: var(--alt-backdrop);
   --d2l-theme-backdrop-dialog-color: var(--alt-surface-float);
   --d2l-theme-backdrop-opacity: 0.72;
   --d2l-theme-badge-background-color: var(--alt-surface-4);
   --d2l-theme-badge-text-color: var(--alt-text);
   --d2l-theme-border-color-disabled: var(--alt-border);
-  --d2l-theme-border-color-emphasized: #8a94a1;
+  --d2l-theme-border-color-emphasized: var(--alt-control-border-hover);
   --d2l-theme-border-color-focus: var(--alt-accent);
   --d2l-theme-border-color-standard: var(--alt-border-strong);
   --d2l-theme-border-color-subtle: var(--alt-border);
@@ -136,7 +171,7 @@ html[data-altera-theme="dark"] {
   --d2l-theme-brand-color-primary-default: var(--alt-accent);
   --d2l-theme-brand-color-primary-hover: var(--alt-accent-hover);
   --d2l-theme-icon-color-active: var(--alt-accent);
-  --d2l-theme-icon-color-faint: #4a525e;
+  --d2l-theme-icon-color-faint: var(--alt-border-heavy);
   --d2l-theme-icon-color-inverted: var(--alt-on-accent);
   --d2l-theme-icon-color-standard: var(--alt-icon);
   --d2l-theme-notification-background-color: #b54a06;
@@ -153,7 +188,7 @@ html[data-altera-theme="dark"] {
   --d2l-theme-text-color-static-subtle: var(--alt-text-2);
   --d2l-theme-text-color-static-faint: var(--alt-text-3);
   --d2l-theme-text-color-static-inverted: var(--alt-on-accent);
-  --d2l-theme-text-color-static-disabled: #e8ecf180;
+  --d2l-theme-text-color-static-disabled: color-mix(in srgb, var(--alt-text) 50%, transparent);
   /* Shadows keep Brightspace's own geometry; only the colour deepens */
   --d2l-theme-shadow-attached-color: rgba(0, 0, 0, 0.35);
   --d2l-theme-shadow-attached: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
@@ -163,6 +198,18 @@ html[data-altera-theme="dark"] {
   --d2l-theme-shadow-floating: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
   --d2l-theme-shadow-inset-color: rgba(0, 0, 0, 0.35);
   --d2l-body-small-text_-_color: var(--alt-text-3);
+
+  /* Glyphs Brightspace draws as data-URI SVGs with the dark text colour baked
+     in: the tick, dash and dot of checked boxes and radios, the select
+     chevron, the required asterisk and the invalid-field warning. A data URI
+     can't read a variable, so each is the same path filled with the value of
+     --alt-icon (or --alt-error, with the mark cut out in --alt-input). */
+  --d2l-input-checkbox-check-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23b4bcc7' d='M8.4 16.6c.6.6 1.5.6 2.1 0l8-8c.6-.6.6-1.5 0-2.1-.6-.6-1.5-.6-2.1 0l-6.9 7-1.9-1.9c-.6-.6-1.5-.6-2.1 0-.6.6-.6 1.5 0 2.1l2.9 2.9z'/%3E%3C/svg%3E");
+  --d2l-input-checkbox-indeterminate-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23b4bcc7' d='M7.5,11h9c0.8,0,1.5,0.7,1.5,1.5l0,0c0,0.8-0.7,1.5-1.5,1.5h-9C6.7,14,6,13.3,6,12.5l0,0C6,11.7,6.7,11,7.5,11z'/%3E%3C/svg%3E");
+  --d2l-input-radio-check-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='5' fill='%23b4bcc7'/%3E%3C/svg%3E");
+  --d2l-input-select-chevron-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 2l4.5 4M10 2L5.5 6' stroke='%23b4bcc7' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round'/%3E%3C/svg%3E");
+  --d2l-input-label-required-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6' viewBox='0 0 5 6'%3E%3Cpath d='M2.38 5.141V3.86c0-.093.006-.184.018-.273.011-.089.031-.173.059-.252a.927.927 0 0 1-.182.175c-.07.051-.145.103-.224.154l-1.106.644-.413-.7 1.113-.644c.084-.051.167-.093.248-.126.082-.033.167-.056.256-.07a.816.816 0 0 1-.256-.07 2.356 2.356 0 0 1-.248-.133L.532 1.914l.406-.7 1.113.658c.08.051.155.104.228.157a.966.966 0 0 1 .185.179 1.002 1.002 0 0 1-.066-.252 2.091 2.091 0 0 1-.018-.273V.388h.826v1.281c0 .098-.006.192-.017.283a1.003 1.003 0 0 1-.067.256c.051-.065.112-.125.182-.179.07-.053.147-.106.231-.157l1.106-.644.413.7-1.113.637a1.954 1.954 0 0 1-.248.13 1.07 1.07 0 0 1-.256.073c.159.028.327.093.504.196l1.113.651-.406.7-1.113-.651a3.307 3.307 0 0 1-.231-.154 1.122 1.122 0 0 1-.189-.175c.06.15.091.322.091.518v1.288H2.38z' fill='%23b4bcc7' fill-rule='evenodd'/%3E%3C/svg%3E");
+  --d2l-input-invalid-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Cpath fill='%23ff8080' d='M17.79 15.11l-7-14a2 2 0 0 0-3.58 0l-7 14a1.975 1.975 0 0 0 .09 1.94A2 2 0 0 0 2 18h14a1.994 1.994 0 0 0 1.7-.95 1.967 1.967 0 0 0 .09-1.94zM9 16a1.5 1.5 0 1 1 1.5-1.5A1.5 1.5 0 0 1 9 16zm.98-4.806a1 1 0 0 1-1.96 0l-.99-5A1 1 0 0 1 8.01 5h1.983a1 1 0 0 1 .98 1.194z'/%3E%3Cpath fill='%2310141a' d='M9 16a1.5 1.5 0 1 1 1.5-1.5A1.5 1.5 0 0 1 9 16zm.98-4.806a1 1 0 0 1-1.96 0l-.99-5A1 1 0 0 1 8.01 5h1.983a1 1 0 0 1 .98 1.194z'/%3E%3C/svg%3E");
 
   background-color: var(--alt-bg) !important;
 }
@@ -338,17 +385,29 @@ html[data-altera-theme="dark"] .d2l-le-TreeAccordionItem-Selected > a.d2l-le-Tre
   background-color: var(--alt-surface-3) !important;
 }
 
-/* Side lists (Class Progress): white rows, a light-blue selected row */
-html[data-altera-theme="dark"] .d2l-datalist-item-actionable,
-html[data-altera-theme="dark"] .d2l-datalist-item-actionable .d2l-datalist-item-content {
+/* Side lists (Class Progress): white rows, a light-blue selected row. Only
+   these accordion rows are filled; rows in plain lists (the Add a File
+   dialog, the Content side panel) are transparent in light mode too and
+   follow Brightspace's variables. */
+html[data-altera-theme="dark"] .d2l-datalist-nesteditem-accordion.d2l-datalist-item-actionable,
+html[data-altera-theme="dark"] .d2l-datalist-nesteditem-accordion.d2l-datalist-item-actionable .d2l-datalist-item-content {
   background-color: var(--alt-surface) !important;
   border-color: var(--alt-border) !important;
 }
-html[data-altera-theme="dark"] .d2l-datalist-item-actionable:hover .d2l-datalist-item-content {
+/* The first row has no rule above it */
+html[data-altera-theme="dark"] .vui-list > .d2l-datalist-nesteditem-accordion.d2l-datalist-item-actionable:first-child {
+  border-top-color: transparent !important;
+}
+html[data-altera-theme="dark"] .d2l-datalist-nesteditem-accordion.d2l-datalist-item-actionable:hover .d2l-datalist-item-content {
   background-color: var(--alt-surface-3) !important;
 }
-html[data-altera-theme="dark"] .d2l-le-DataListItem-Selected .d2l-datalist-item-content,
-html[data-altera-theme="dark"] .d2l-le-DataListItem-Selected:hover .d2l-datalist-item-content {
+/* Plain lists: a selected row's hover and focus fill is a literal light blue */
+html[data-altera-theme="dark"] .vui-list > :is(.d2l-list-item-action-focus, .d2l-list-item-action-hover).vui-selected {
+  background-color: var(--alt-accent-tint) !important;
+}
+/* (the doubled class outranks the row and hover rules above) */
+html[data-altera-theme="dark"] .d2l-le-DataListItem-Selected.d2l-le-DataListItem-Selected.d2l-datalist-item .d2l-datalist-item-content,
+html[data-altera-theme="dark"] .d2l-le-DataListItem-Selected.d2l-le-DataListItem-Selected.d2l-datalist-item:hover .d2l-datalist-item-content {
   background-color: var(--alt-accent-tint) !important;
 }
 /* Its accordion groups are edged in a literal grey */
@@ -452,26 +511,48 @@ html[data-altera-theme="dark"] .dco_c {
 
 /* ---------- Dialogs and popup windows ---------- */
 
-/* Legacy dialogs (group members, confirmations): white frame, and a
-   backdrop that uses the lightest grey, so it washed the page out */
-html[data-altera-theme="dark"] .ddial_o2 {
+/* Legacy dialogs (group members, confirmations) and the newer ones that load
+   a page in a frame (the editor's Insert Stuff, Quicklink and colour
+   pickers): white frame, and a backdrop that uses the lightest grey, so it
+   washed the page out */
+html[data-altera-theme="dark"] .ddial_o2,
+html[data-altera-theme="dark"] .d2l-dialog-mvc .d2l-dialog-inner {
   background-color: var(--alt-surface-float) !important;
   border-color: var(--alt-border-strong) !important;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5) !important;
 }
 html[data-altera-theme="dark"] .d2l-shim-opaque {
-  background-color: #05070a !important;
+  background-color: var(--alt-backdrop) !important;
 }
 /* Pages loaded inside a dialog or a homepage widget frame sit on that
-   container's surface, not the page background */
-html[data-altera-theme="dark"] body.dbd_dialog {
+   container's surface, not the page background. <html> takes it too: the
+   body can be zero-height (the Add a File dialog positions its content),
+   and the frame then shows the root's colour around the list. */
+html[data-altera-theme="dark"]:has(> body:is(.dbd_dialog, .d2l-dialog-document-body)),
+html[data-altera-theme="dark"] body:is(.dbd_dialog, .d2l-dialog-document-body),
+html[data-altera-theme="dark"][data-altera-frame="dialog"],
+html[data-altera-theme="dark"][data-altera-frame="dialog"] body {
   background-color: var(--alt-surface-float) !important;
 }
+html[data-altera-theme="dark"]:has(> body.dbd_frame),
 html[data-altera-theme="dark"] body.dbd_frame {
   background-color: var(--alt-surface) !important;
 }
-html[data-altera-theme="dark"] body:is(.dbd_dialog, .dbd_frame) :is(.d2l-page-main, .d2l-page-bg, .d2l-page-bg > div) {
+html[data-altera-theme="dark"] body:is(.dbd_dialog, .d2l-dialog-document-body, .dbd_frame) :is(.d2l-page-main, .d2l-page-bg, .d2l-page-bg > div),
+html[data-altera-theme="dark"][data-altera-frame="dialog"] :is(.d2l-page-main, .d2l-page-bg, .d2l-page-bg > div) {
   background-color: transparent !important;
+}
+
+/* Notices that rise from the bottom of the page (the unsupported-browser
+   notice after signing in on an old browser): a white panel with a literal
+   grey edge, and light grey bands behind its headings */
+html[data-altera-theme="dark"] .d2l-page-message {
+  background-color: var(--alt-surface-float) !important;
+  border-color: var(--alt-border-strong) !important;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5) !important;
+}
+html[data-altera-theme="dark"] .d2l-pt-browser-heading-container {
+  background-color: var(--alt-surface-3) !important;
 }
 
 /* Popup windows (e.g. Email from Groups): title bar and button bar */
@@ -592,8 +673,8 @@ html[data-altera-theme="dark"] div.d2l-le-calendar-dot-circle {
    SHADOW_CSS for authored HTML rendered in shadow roots. */
 
 html[data-altera-theme="dark"] [data-altera-bg="white"],
-html[data-altera-theme="dark"] [style*="background-color: rgb(255, 255, 255)"],
-html[data-altera-theme="dark"] [style*="background-color:#fff"],
+html[data-altera-theme="dark"] [style*="background-color: rgb(255, 255, 255)"]:not(.d2l-colourselector *),
+html[data-altera-theme="dark"] [style*="background-color:#fff"]:not(.d2l-colourselector *),
 html[data-altera-theme="dark"] [style*="background-color: #fff"],
 html[data-altera-theme="dark"] [style*="background-color: #FFF"],
 html[data-altera-theme="dark"] [style*="background-color: white"],
@@ -605,8 +686,16 @@ html[data-altera-theme="dark"] [bgcolor="#fff" i],
 html[data-altera-theme="dark"] [bgcolor="white" i] {
   background-color: var(--alt-surface) !important;
 }
+/* The editor's colour picker is left out (theme.js doesn't tag it either):
+   its swatches are the colours on offer, and its preview shows the chosen
+   colour on the page it will be read on. */
 html[data-altera-theme="dark"] [data-altera-bg="neutral"] {
   background-color: var(--alt-surface-2) !important;
+}
+/* A mid grey is usually a table's own colour showing between its cells as
+   gridlines (Self Registration) */
+html[data-altera-theme="dark"] [data-altera-bg="mid"] {
+  background-color: var(--alt-border-strong) !important;
 }
 html[data-altera-theme="dark"] [data-altera-fg="dark"] {
   color: var(--alt-text) !important;
@@ -634,7 +723,7 @@ html[data-altera-theme="dark"] .d2l-input {
 html[data-altera-theme="dark"] input:hover:not(:disabled):not(:focus),
 html[data-altera-theme="dark"] select:hover:not(:disabled):not(:focus),
 html[data-altera-theme="dark"] textarea:hover:not(:disabled):not(:focus) {
-  border-color: #8a94a1 !important;
+  border-color: var(--alt-control-border-hover) !important;
 }
 html[data-altera-theme="dark"] input:focus,
 html[data-altera-theme="dark"] select:focus,
@@ -715,7 +804,7 @@ html[data-altera-theme="dark"] input.d2l-button:not([primary]) {
 html[data-altera-theme="dark"] button.d2l-button:not([primary]):hover,
 html[data-altera-theme="dark"] a.d2l-button:not([primary]):hover,
 html[data-altera-theme="dark"] input.d2l-button:not([primary]):hover {
-  background-color: #353d48 !important;
+  background-color: var(--alt-surface-5) !important;
 }
 html[data-altera-theme="dark"] button.d2l-button[primary],
 html[data-altera-theme="dark"] a.d2l-button[primary],
@@ -838,7 +927,8 @@ html[data-altera-theme="dark"] .d2l-chart svg text {
 
 /* ---------- PDF viewer ----------
    CourseLink shows PDFs in pdf.js, which only goes dark when the OS is in
-   dark mode. theme.js marks its frame "pdf"; map its variables to the palette.
+   dark mode. theme.js marks its frame "pdf"; its variables take the palette's
+   tokens, so it follows the dark style and the accent.
    The document pages themselves stay as authored. */
 
 /* On the content page, the viewer's frame sits under a literal grey rule */
@@ -848,54 +938,53 @@ html[data-altera-theme="dark"] .d2l-fileviewer-pdf-pdfjs {
 
 html[data-altera-theme="pdf"] {
   color-scheme: dark;
-  --alt-accent: #66b2ff;
-  --main-color: #e8ecf1;
-  --body-bg-color: #0d1015;
-  --errorWrapper-bg-color: #a8232d;
+  --main-color: var(--alt-text);
+  --body-bg-color: var(--alt-bg);
+  --errorWrapper-bg-color: #a8232d; /* a deep red under pdf.js's white error text */
   --progressBar-color: var(--alt-accent);
-  --progressBar-indeterminate-bg-color: #1b2028;
-  --progressBar-indeterminate-blend-color: #2c333d;
-  --scrollbar-color: #4a525e;
-  --scrollbar-bg-color: #151920;
-  --toolbar-icon-bg-color: #c3cad4;
-  --toolbar-icon-hover-bg-color: #e8ecf1;
-  --sidebar-narrow-bg-color: rgba(21, 25, 32, 0.92);
-  --sidebar-toolbar-bg-color: #1b2028;
-  --toolbar-bg-color: #151920;
-  --toolbar-border-color: #262c35;
-  --button-hover-color: #2c333d;
-  --toggled-btn-color: #e8ecf1;
-  --toggled-btn-bg-color: #2c333d;
-  --toggled-hover-active-btn-color: #353d48;
-  --dropdown-btn-bg-color: #1b2028;
-  --separator-color: #262c35;
-  --field-color: #e8ecf1;
-  --field-bg-color: #10141a;
-  --field-border-color: #6b7584;
-  --treeitem-color: #c3cad4;
-  --treeitem-hover-color: #e8ecf1;
-  --treeitem-selected-color: #e8ecf1;
-  --treeitem-selected-bg-color: #2c333d;
-  --sidebaritem-bg-color: #232932;
-  --doorhanger-bg-color: #1e232b;
-  --doorhanger-border-color: #343b46;
-  --doorhanger-hover-color: #e8ecf1;
-  --doorhanger-hover-bg-color: #2c333d;
-  --doorhanger-separator-color: #343b46;
-  --dialog-button-bg-color: #2c333d;
-  --dialog-button-hover-bg-color: #353d48;
+  --progressBar-indeterminate-bg-color: var(--alt-surface-2);
+  --progressBar-indeterminate-blend-color: var(--alt-surface-4);
+  --scrollbar-color: var(--alt-border-heavy);
+  --scrollbar-bg-color: var(--alt-surface);
+  --toolbar-icon-bg-color: var(--alt-text-2);
+  --toolbar-icon-hover-bg-color: var(--alt-text);
+  --sidebar-narrow-bg-color: color-mix(in srgb, var(--alt-surface) 92%, transparent);
+  --sidebar-toolbar-bg-color: var(--alt-surface-2);
+  --toolbar-bg-color: var(--alt-surface);
+  --toolbar-border-color: var(--alt-border);
+  --button-hover-color: var(--alt-surface-4);
+  --toggled-btn-color: var(--alt-text);
+  --toggled-btn-bg-color: var(--alt-surface-4);
+  --toggled-hover-active-btn-color: var(--alt-surface-5);
+  --dropdown-btn-bg-color: var(--alt-surface-2);
+  --separator-color: var(--alt-border);
+  --field-color: var(--alt-text);
+  --field-bg-color: var(--alt-input);
+  --field-border-color: var(--alt-control-border);
+  --treeitem-color: var(--alt-text-2);
+  --treeitem-hover-color: var(--alt-text);
+  --treeitem-selected-color: var(--alt-text);
+  --treeitem-selected-bg-color: var(--alt-surface-4);
+  --sidebaritem-bg-color: var(--alt-surface-3);
+  --doorhanger-bg-color: var(--alt-surface-float);
+  --doorhanger-border-color: var(--alt-border-strong);
+  --doorhanger-hover-color: var(--alt-text);
+  --doorhanger-hover-bg-color: var(--alt-surface-4);
+  --doorhanger-separator-color: var(--alt-border-strong);
+  --dialog-button-bg-color: var(--alt-surface-4);
+  --dialog-button-hover-bg-color: var(--alt-surface-5);
 }
 /* CourseLink's own toolbar buttons (View as Text, Download) are unstyled
    browser buttons: light grey with a bevelled border. Secondary buttons
    here, with the bevel flattened (it draws a light edge on dark). */
 html[data-altera-theme="pdf"] #toolbarViewerRight .d2l-button {
-  background-color: #2c333d !important;
-  border-color: #2c333d !important;
+  background-color: var(--alt-surface-4) !important;
+  border-color: var(--alt-surface-4) !important;
   border-style: solid !important;
-  color: #e8ecf1 !important;
+  color: var(--alt-text) !important;
 }
 html[data-altera-theme="pdf"] #toolbarViewerRight .d2l-button:hover {
-  background-color: #353d48 !important;
+  background-color: var(--alt-surface-5) !important;
 }
 /* CourseLink's fullscreen button has no icon (a solid square in both
    themes); give it pdf.js's own presentation-mode icon */
@@ -911,6 +1000,22 @@ html[data-altera-theme="pdf"] #fullscreenMode::before {
 html[data-altera-theme="content"] {
   background-color: #fff !important;
   filter: invert(0.9) hue-rotate(180deg);
+  /* The frame's own scrollbar is drawn outside the filter, so it gets its
+     final colours */
+  scrollbar-color: var(--alt-border-heavy) var(--alt-surface);
+}
+/* The HTML editor's writing area is content too, and CourseLink's own tools
+   read its colours: the text-colour picker previews and measures contrast
+   against its background, and the accessibility checker against both. A
+   palette swap would have them judge what's written against a dark page
+   nobody else sees, so it's inverted instead, a little deeper to sit with
+   the field around it. */
+html[data-altera-theme="content"][data-altera-frame="editor"] {
+  filter: invert(0.95) hue-rotate(180deg);
+}
+/* Black: white lands beside its surfaces instead of on a grey */
+html[data-altera-theme="content"][data-altera-style="black"] {
+  filter: invert(0.96) hue-rotate(180deg);
 }
 html[data-altera-theme="content"] img,
 html[data-altera-theme="content"] picture,

@@ -35,7 +35,8 @@ body:
     attributes:
       label: Appearance
       options:
-        - Dark
+        - Dark (Graphite)
+        - Dark (Black)
         - Light
         - System
     validations:
@@ -50,6 +51,7 @@ body:
         - Gryphon gold
         - Violet
         - Mint
+        - Custom
   - type: dropdown
     id: width
     attributes:

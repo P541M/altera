@@ -53,8 +53,10 @@ writes, so the source folder itself loads only in Chrome.
    light" table in the README and "Where a fix goes" in AGENTS.md cover most
    cases.
 3. Keep to the surface language: recolour, don't redraw. Don't add borders,
-   gradients or animations that CourseLink doesn't have, and nothing Altera
-   adds should be visible on the page.
+   gradients or animations that CourseLink doesn't have, and put nothing of
+   Altera's own on the page. A fix uses palette tokens, so it holds in both
+   dark styles. Changing layout, as the homepage tidy-up does, has its own
+   terms in Part 3 of AGENTS.md; open an issue first.
 4. Run the checks:
 
    ```sh
@@ -63,15 +65,16 @@ writes, so the source folder itself loads only in Chrome.
    node tools/check-contrast.js
    ```
 
-5. Work through the verification checklist in AGENTS.md: both themes, 390px
-   width, every menu, dialog and hover state on the page, and inside its
-   frames.
+5. Work through the verification checklist in AGENTS.md: both themes and
+   both dark styles, 390px width, every menu, dialog and hover state on the
+   page, and inside its frames.
 
 ## Testing on CourseLink
 
 - **Look, don't act.** Never submit, post, send, save or start anything while
   testing: no quiz attempts, no Dropbox submissions, no messages. Open things
-  and close them.
+  and close them, with a dialog's own Cancel rather than a button on the page
+  behind it.
 - **Keep screenshots private.** CourseLink pages show your name, courses,
   grades and classmates. Crop or blur them before attaching them to an issue
   or pull request.

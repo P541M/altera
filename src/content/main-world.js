@@ -24,11 +24,18 @@
       --d2l-popover-default-shadow-color: rgba(0, 0, 0, 0.5);
     }
 
+    /* Menu items are filled with the base colour (the nav bar's), a shade
+       darker than the dropdown they open in; in light mode both are white.
+       Menus with Brightspace's own dark theme keep it. */
+    :host(d2l-menu:not([theme="dark"])) {
+      --d2l-menu-background-color: var(--alt-surface-float);
+    }
+
     /* Tooltips take their fill from the text colour, which the palette flips
        to near-white under hard-coded white text. Give them a raised fill. */
     :host(d2l-tooltip) {
-      --d2l-tooltip-background-color: #39404b;
-      --d2l-tooltip-border-color: #4a525e;
+      --d2l-tooltip-background-color: var(--alt-tooltip);
+      --d2l-tooltip-border-color: var(--alt-border-heavy);
       --d2l-tooltip-outline-color: transparent;
     }
     :host(d2l-tooltip[state="error"]) {
@@ -69,6 +76,12 @@
       color: var(--alt-bg) !important;
     }
 
+    /* Selected rows in selectable lists (the Roles filter in All courses):
+       a literal light blue, under a label in the text colour */
+    :host([selected]:not([selection-disabled]):not([skeleton])) [slot="outside-control-container"] {
+      background-color: var(--alt-accent-tint) !important;
+    }
+
     /* Form fields rendered inside components */
     input.d2l-input, textarea.d2l-input, select.d2l-input-select, .d2l-input {
       background-color: var(--alt-input) !important;
@@ -77,7 +90,7 @@
     }
     input.d2l-input:hover:not(:focus):not(:disabled),
     textarea.d2l-input:hover:not(:focus):not(:disabled) {
-      border-color: #8a94a1 !important;
+      border-color: var(--alt-control-border-hover) !important;
     }
     .d2l-input::placeholder { color: var(--alt-text-3) !important; opacity: 1; }
 
@@ -91,6 +104,96 @@
     .d2l-htmleditor-container {
       background-color: var(--alt-input) !important;
       border-color: var(--alt-control-border) !important;
+    }
+    /* The writing area's frame is white until its document paints */
+    .tox .tox-edit-area__iframe {
+      background-color: var(--alt-input) !important;
+    }
+    /* A toolbar toggle that's on (Format Painter) turns a literal light blue
+       under the pointer */
+    button[aria-pressed="true"]:hover .d2l-htmleditor-button-background {
+      background-color: var(--alt-accent-tint) !important;
+    }
+    /* The editor's own panels (Accessibility Checker) come from TinyMCE's
+       stylesheet: white, with black text and a fixed blue button */
+    .tox .tox-dialog,
+    .tox .tox-dialog__header,
+    .tox .tox-dialog__footer {
+      background-color: var(--alt-surface-float) !important;
+      border-color: var(--alt-border-strong) !important;
+      color: var(--alt-text) !important;
+    }
+    .tox .tox-dialog__title,
+    .tox .tox-dialog__body,
+    .tox .tox-dialog__body-content :is(p, label, li) {
+      color: var(--alt-text) !important;
+    }
+    .tox .tox-dialog .tox-button--naked,
+    .tox .tox-dialog .tox-button--naked svg {
+      color: var(--alt-icon) !important;
+      fill: var(--alt-icon) !important;
+    }
+    .tox .tox-dialog .tox-button:not(.tox-button--naked, .tox-button--secondary) {
+      background-color: var(--alt-accent) !important;
+      border-color: var(--alt-accent) !important;
+      color: var(--alt-on-accent) !important;
+    }
+    .tox .tox-dialog .tox-button--secondary {
+      background-color: var(--alt-surface-4) !important;
+      border-color: var(--alt-surface-4) !important;
+      color: var(--alt-text) !important;
+    }
+    .tox .tox-dialog :is(.tox-textfield, .tox-textarea, .tox-listbox) {
+      background-color: var(--alt-input) !important;
+      border-color: var(--alt-control-border) !important;
+      color: var(--alt-text) !important;
+    }
+    .tox .tox-dialog a {
+      color: var(--alt-accent) !important;
+    }
+    /* Its results keep their meaning: each state's heading and icon in its
+       colour, lifted to read on dark, on a deep tint of the same hue */
+    .tox .accessibility-issue__description,
+    .tox .accessibility-issue__description :is(p, span, div) {
+      color: var(--alt-text) !important;
+    }
+    .tox .accessibility-issue--success :is(h2, .tox-icon svg) { color: var(--alt-success) !important; fill: var(--alt-success) !important; }
+    .tox .accessibility-issue--error :is(h2, .tox-icon svg) { color: var(--alt-error) !important; fill: var(--alt-error) !important; }
+    .tox .accessibility-issue--warn :is(h2, .tox-icon svg) { color: var(--alt-warning) !important; fill: var(--alt-warning) !important; }
+    .tox .accessibility-issue--info :is(h2, .tox-icon svg) { color: var(--alt-accent) !important; fill: var(--alt-accent) !important; }
+    .tox .accessibility-issue--success .accessibility-issue__description { background-color: var(--d2l-color-olivine-plus-1) !important; }
+    .tox .accessibility-issue--error .accessibility-issue__description { background-color: var(--d2l-color-cinnabar-plus-2) !important; }
+    .tox .accessibility-issue--warn .accessibility-issue__description { background-color: var(--d2l-color-carnelian-plus-1) !important; }
+    .tox .accessibility-issue--info .accessibility-issue__description { background-color: var(--alt-accent-tint) !important; }
+
+    /* The small toolbar that floats over a table or image being edited */
+    .tox .tox-pop__dialog {
+      background-color: var(--alt-surface-float) !important;
+      border-color: var(--alt-border-strong) !important;
+    }
+    .tox .tox-pop .tox-tbtn {
+      background-color: transparent !important;
+      color: var(--alt-icon) !important;
+    }
+    .tox .tox-pop .tox-tbtn svg {
+      fill: var(--alt-icon) !important;
+    }
+    .tox .tox-pop .tox-tbtn:is(:hover, :focus) {
+      background-color: var(--alt-surface-3) !important;
+    }
+    /* Its pointer is two CSS triangles, one for the fill and one for the edge */
+    .tox .tox-pop.tox-pop--bottom::after { border-top-color: var(--alt-surface-float) !important; }
+    .tox .tox-pop.tox-pop--bottom::before { border-top-color: var(--alt-border-strong) !important; }
+    .tox .tox-pop.tox-pop--top::after { border-bottom-color: var(--alt-surface-float) !important; }
+    .tox .tox-pop.tox-pop--top::before { border-bottom-color: var(--alt-border-strong) !important; }
+
+    /* The Source Code dialog is a code editor in its own light colours, under
+       class names generated per build. Inverted as one piece, like other
+       authored content; the literal dark text colour is what the filter
+       flips for plain text. */
+    .d2l-htmleditor-sourcecode-container .cm-scroller {
+      color: #202122 !important;
+      filter: invert(0.93) hue-rotate(180deg);
     }
 
     /* Loading spinner. The arc animation is drawn by rotating wedges with
@@ -119,6 +222,7 @@
        tagged by theme.js as the page's are (see theme.css) */
     [data-altera-bg="white"] { background-color: var(--alt-surface) !important; }
     [data-altera-bg="neutral"] { background-color: var(--alt-surface-2) !important; }
+    [data-altera-bg="mid"] { background-color: var(--alt-border-strong) !important; }
     [data-altera-bg="tint"] {
       background-color: var(--altera-tint) !important;
       color: var(--alt-text) !important;

@@ -18,12 +18,13 @@ From the verification list in [AGENTS.md](https://github.com/P541M/altera/blob/m
 - [ ] `node --check` passes on every changed `.js` file
 - [ ] `node tools/check-tokens.js` passes
 - [ ] `node tools/check-contrast.js` passes
-- [ ] Reloaded Altera and checked every page this touches, in dark mode
+- [ ] Reloaded Altera and checked every page this touches, in dark mode, in both dark styles (Graphite and Black)
 - [ ] Light mode is unchanged from CourseLink without Altera
 - [ ] Checked at 390px wide (and the burger menu, if navigation is involved)
 - [ ] Opened every menu, dropdown, dialog, tab and hover state on those pages, and every view a tool offers (Calendar: Day, Week, Month, List)
 - [ ] No light borders, rules or thin bars left over, not just light surfaces
-- [ ] Checked inside frames on those pages (homepage widgets, legacy tools, the PDF viewer)
+- [ ] Checked inside frames on those pages (homepage widgets, legacy tools, the PDF viewer, dialogs, the HTML editor)
+- [ ] No fill a shade off the surface it sits on (a menu in its dropdown, a page in its dialog)
 - [ ] Measured text contrast on the real page, not just the palette
 - [ ] Any gradient or border in the result also exists with the theme off
 - [ ] No flash when loading the page or switching themes

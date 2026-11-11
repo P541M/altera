@@ -102,9 +102,9 @@ async function injectIntoOpenTabs() {
     if (tab.discarded || (await isLive(tab.id))) continue;
     const allFrames = { tabId: tab.id, allFrames: true };
     try {
-      await chrome.scripting.insertCSS({ target: allFrames, files: ["src/styles/theme.css"] });
+      await chrome.scripting.insertCSS({ target: allFrames, files: ["src/styles/theme.css", "src/styles/home.css"] });
       await chrome.scripting.executeScript({ target: allFrames, world: "MAIN", files: ["src/content/main-world.js"] });
-      await chrome.scripting.executeScript({ target: allFrames, files: ["src/shared/settings.js", "src/content/theme.js"] });
+      await chrome.scripting.executeScript({ target: allFrames, files: ["src/shared/settings.js", "src/content/theme.js", "src/content/home.js"] });
       await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["src/content/session.js"] });
     } catch {
       // Tab closed or navigated mid-injection; it will load normally.

@@ -14,6 +14,7 @@
   --bad: #cd2026;
   /* Accent shown in the dark preview; follows the selected accent */
   --preview-accent: #66b2ff;
+  --custom-accent: #ff9d66;
   color-scheme: light;
 }
 
@@ -31,10 +32,20 @@
   color-scheme: dark;
 }
 
+/* The Black dark style: the same text and status colours on its surfaces */
+:root[data-theme="dark"][data-style="black"] {
+  --bg: #0b0b0d;
+  --rule: #1c1c20;
+  --hover: #1a1a1e;
+  --control: #70707a;
+}
+
 :root[data-accent="gryphon"] { --preview-accent: #ff7d8b; }
 :root[data-accent="gold"] { --preview-accent: #f2c14e; }
 :root[data-accent="violet"] { --preview-accent: #b7a3ff; }
 :root[data-accent="mint"] { --preview-accent: #4fd6ac; }
+/* --custom-accent is set by popup.js, from alteraCustomAccent() */
+:root[data-accent="custom"] { --preview-accent: var(--custom-accent); }
 :root[data-theme="dark"] { --accent: var(--preview-accent); }
 
 * {
@@ -120,6 +131,9 @@ h2 {
 .row-hint {
   color: var(--muted);
   font-size: 12px;
+}
+h2 + .row {
+  margin-top: 0;
 }
 .row:has(.switch:disabled) {
   cursor: default;
@@ -305,6 +319,13 @@ h2 {
   --t-text: #343b46;
   --t-link: var(--preview-accent);
 }
+:root[data-style="black"] .thumb-dark {
+  --t-page: #000000;
+  --t-nav: #0b0b0d;
+  --t-line: #1c1c20;
+  --t-tile: #0b0b0d;
+  --t-text: #2a2a2f;
+}
 .thumb-light,
 .thumb-dark {
   background: var(--t-page);
@@ -349,14 +370,62 @@ h2 {
 .thumb-system .half.thumb-light { clip-path: inset(0 50% 0 0); }
 .thumb-system .half.thumb-dark { clip-path: inset(0 0 0 50%); }
 
-/* ----- Accent ----- */
+/* ----- Dark style and accent ----- */
 
-.accent-row {
+.option-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 14px;
+  min-height: 24px;
+  margin-top: 12px;
 }
+
+.segmented {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.segmented label {
+  position: relative;
+  cursor: pointer;
+}
+.segmented span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.segmented label:hover span {
+  color: var(--text);
+}
+.segmented input:checked + span {
+  background: var(--hover);
+  color: var(--text);
+  font-weight: 600;
+}
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+/* Each style's page colour, edged so black shows on a dark popup */
+.chip {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--control);
+  border-radius: 50%;
+}
+.chip-graphite { background: #151920; }
+.chip-black { background: #000000; }
+.segmented[aria-disabled="true"] {
+  opacity: 0.45;
+}
+.segmented[aria-disabled="true"] label {
+  cursor: default;
+}
+
 .accent-name {
   margin-left: 4px;
   color: var(--muted);
@@ -386,11 +455,85 @@ h2 {
   outline: 2px solid var(--text);
   outline-offset: 4px;
 }
+/* The custom colour is a ring until it's the one in use */
+.swatches .swatch-custom {
+  --swatch: var(--custom-accent);
+  background: none;
+  box-shadow: inset 0 0 0 2.5px var(--swatch);
+}
+.swatches input:checked + .swatch-custom {
+  background: var(--swatch);
+}
 .swatches[aria-disabled="true"] {
   opacity: 0.45;
 }
 .swatches[aria-disabled="true"] label {
   cursor: default;
+}
+
+/* Shown while the custom accent is selected: a hue slider and the hex code */
+.custom-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.custom-row[hidden] {
+  display: none;
+}
+.hue {
+  appearance: none;
+  flex: 1;
+  height: 6px;
+  margin: 0;
+  border-radius: 3px;
+  /* Twelve flat steps round the hue wheel, not a blend */
+  background: linear-gradient(
+    to right,
+    #f47a7a 0 8.33%, #f4b77a 0 16.66%, #f4f47a 0 25%, #b7f47a 0 33.33%,
+    #7af47a 0 41.66%, #7af4b7 0 50%, #7af4f4 0 58.33%, #7ab7f4 0 66.66%,
+    #7a7af4 0 75%, #b77af4 0 83.33%, #f47af4 0 91.66%, #f47ab7 0
+  );
+  cursor: pointer;
+}
+.hue::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--custom-accent);
+  box-shadow: 0 0 0 1px var(--control);
+}
+.hue::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--custom-accent);
+  box-shadow: 0 0 0 1px var(--control);
+}
+.hex {
+  width: 76px;
+  padding: 3px 7px;
+  border: 1px solid var(--control);
+  border-radius: 5px;
+  background: none;
+  color: var(--text);
+  font: 12px ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+.hex[aria-invalid="true"] {
+  border-color: var(--bad);
+}
+.hue:disabled,
+.hex:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.custom-note {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 /* ----- Footer ----- */

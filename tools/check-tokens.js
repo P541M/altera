@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..");
-const files = ["src/styles/theme.css", "src/content/main-world.js", "src/content/theme.js"];
+const files = ["src/styles/theme.css", "src/styles/home.css", "src/content/main-world.js", "src/content/theme.js", "src/content/home.js"];
 const defined = new Set(
   [...fs.readFileSync(path.join(root, "src/styles/theme.css"), "utf8").matchAll(/(--alt-[\w-]+)\s*:/g)].map((m) => m[1])
 );

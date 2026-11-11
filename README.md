@@ -18,7 +18,7 @@
 - [Using Altera](#using-altera)
 - [What it changes](#what-it-changes)
 - [Design](#design): principles, palette, accents, components, popup, icon
-- [How it works](#how-it-works): the theming engine, keep-alive, settings
+- [How it works](#how-it-works): the theming engine, the homepage tidy-up, keep-alive, settings
 - [Development](#development): layout, reloading, testing, tools
 - [Limitations](#limitations)
 - [Privacy](#privacy)
@@ -95,15 +95,18 @@ CourseLink" with an **Allow** button.
 
 ## Using Altera
 
-Everything lives in the toolbar popup. Nothing is added to CourseLink itself.
+Every setting lives in the toolbar popup. Altera puts no controls of its own
+on CourseLink.
 
 | Control | What it does |
 | --- | --- |
 | **Session** | Whether you're signed in, and when the session was last refreshed. The refresh button refreshes now. |
 | **Keep me signed in** | On by default. Turn it off to let CourseLink time out as usual. |
 | **Appearance** | Light, Dark or System (follows your OS). |
-| **Accent** | Link and button colour in the dark theme: Blue, Gryphon red, Gryphon gold, Violet or Mint. |
+| **Dark style** | Which dark theme you get: Graphite, a blue-leaning dark grey, or Black, the same on near-black. |
+| **Accent** | Link and button colour in the dark theme: Blue, Gryphon red, Gryphon gold, Violet, Mint, or Custom. Custom shows a hue slider and a hex field; a colour too dark to read on dark is lightened, and the popup says so. |
 | **Darken course files** | Also darkens the HTML pages instructors upload. Turn it off if one looks wrong. |
+| **Tidy homepage** | On by default. Folds the homepage's information widgets down to their titles. Click a title to open it; the ones you open stay open. |
 
 **Alt+Shift+D** switches between light and dark from any tab. You can rebind it
 at `chrome://extensions/shortcuts`, or in Firefox from the gear menu in
@@ -111,12 +114,18 @@ at `chrome://extensions/shortcuts`, or in Firefox from the gear menu in
 
 ## What it changes
 
-- **A complete dark theme.** It covers the homepage, course tiles, Content,
-  Dropbox and rubrics, Grades, Quizzes, Discussions, Groups, Calendar,
-  Classlist, Announcements, Progress, FAQ, ePortfolio, Locker, Media Library,
-  Self Registration, account settings, menus, tooltips, profile cards,
-  dialogs, pop-up windows, the PDF viewer and the sign-in page, at desktop and
-  phone widths.
+- **A complete dark theme, in two styles.** It covers the homepage, course
+  tiles, Content, Dropbox and rubrics, Grades, Quizzes, Discussions, Groups,
+  Calendar, Classlist, Announcements, Progress, FAQ, ePortfolio, Locker,
+  Media Library, Self Registration, account settings, menus, tooltips,
+  profile cards, dialogs, the HTML editor and its pickers, pop-up windows,
+  the PDF viewer and the sign-in page, at desktop and phone widths. Graphite
+  follows CourseLink's own cool greys; Black puts the same theme on
+  near-black. Any colour can be the accent.
+- **A tidier homepage.** The column beside My Courses is mostly notices that
+  never change (Student Wellness, Accessibility, the academic misconduct
+  policy, and so on). Altera folds them down to their titles, the way
+  CourseLink itself collapses a widget, and remembers the ones you open.
 - **No surprise sign-outs.** CourseLink ends a session after 3 idle hours.
   While a CourseLink tab is open, Altera makes the same request as CourseLink's
   own "Continue session" button every 5 minutes. It also stops the browser
@@ -147,47 +156,71 @@ Every decision follows from that:
 3. **Tone, not lines.** Surfaces separate by elevation steps (each one a
    little lighter), the way CourseLink's greys do in light mode. Borders stay
    where CourseLink already draws them.
-4. **No branding on the page.** Altera adds nothing to CourseLink: no
-   badges, toasts, banners or "powered by". Its name and icon appear only in
-   the toolbar popup.
+4. **No branding on the page.** Altera puts nothing of its own on
+   CourseLink: no badges, toasts, banners or "powered by". Its name and icon
+   appear only in the toolbar popup.
 5. **Accessible by construction.** Every text colour meets WCAG AA (4.5:1) on
    every surface it can land on, and control edges and focus rings meet 3:1.
    `tools/check-contrast.js` enforces this.
 6. **Nothing flashes.** The theme is applied before the first paint, and
    stylesheets CourseLink adds later are recoloured before the browser draws
    them.
+7. **Layout changes are CourseLink's own, and optional.** The theme only
+   recolours. The one place Altera rearranges anything is the homepage
+   tidy-up, and it does that with CourseLink's own collapsed widget, behind a
+   setting that puts the page back exactly as CourseLink shipped it.
+8. **CourseLink's tools keep telling the truth.** What you write is read by
+   people without Altera, on white. The HTML editor's colour picker and
+   accessibility checker measure contrast from the colours they find, so
+   Altera never repaints the writing area or the picker's swatches; it
+   inverts the view and leaves the real colours alone.
 
 ### Palette
 
-A graphite that leans slightly blue, following Brightspace's own cool greys
-(its light theme is built on blue-greys like `#f1f5fb` and `#e3e9f1`, so a
-neutral grey would look foreign). It's defined once, as `--alt-*` custom
-properties at the top of [`src/styles/theme.css`](src/styles/theme.css).
+Two dark styles share one set of `--alt-*` custom properties, defined at
+the top of [`src/styles/theme.css`](src/styles/theme.css). Every rule uses
+the tokens, so it works in both.
+
+**Graphite**, the default, leans slightly blue, following Brightspace's own
+cool greys (its light theme is built on blue-greys like `#f1f5fb` and
+`#e3e9f1`, so a neutral grey would look foreign). **Black** is the same
+theme on near-black surfaces without the blue cast, a few shades apart, for
+people who want the page to be black. It changes surfaces and lines only:
+text, icons, accents and status colours are identical, and since its
+surfaces are darker, every contrast figure below gets better, never worse.
 
 #### Surfaces (lowest to highest)
 
-| Token | Hex | Used for | `--alt-text` on it |
-| --- | --- | --- | --- |
-| `--alt-bg` | `#0d1015` | Page background | 16.1:1 |
-| `--alt-input` | `#10141a` | Text fields, sunk below the surface they sit on | 15.6:1 |
-| `--alt-surface` | `#151920` | Nav bar, widgets, panels, tables | 14.9:1 |
-| `--alt-surface-2` | `#1b2028` | Cards, table headers, subtle fills | 13.8:1 |
-| `--alt-surface-float` | `#1e232b` | Menus, dropdowns, dialogs (anything floating) | 13.3:1 |
-| `--alt-surface-3` | `#232932` | Hover | 12.3:1 |
-| `--alt-surface-4` | `#2c333d` | Secondary buttons, pressed states, chips | 10.7:1 |
+| Token | Graphite | Black | Used for | `--alt-text` on it |
+| --- | --- | --- | --- | --- |
+| `--alt-bg` | `#0d1015` | `#000000` | Page background | 16.1:1 / 17.7:1 |
+| `--alt-input` | `#10141a` | `#000000` | Text fields, sunk below the surface they sit on | 15.6:1 / 17.7:1 |
+| `--alt-surface` | `#151920` | `#0b0b0d` | Nav bar, widgets, panels, tables | 14.9:1 / 16.6:1 |
+| `--alt-surface-2` | `#1b2028` | `#111114` | Cards, table headers, subtle fills | 13.8:1 / 15.9:1 |
+| `--alt-surface-float` | `#1e232b` | `#151518` | Menus, dropdowns, dialogs (anything floating, and what's inside it) | 13.3:1 / 15.4:1 |
+| `--alt-surface-3` | `#232932` | `#1a1a1e` | Hover | 12.3:1 / 14.6:1 |
+| `--alt-surface-4` | `#2c333d` | `#222226` | Secondary buttons, pressed states, chips | 10.7:1 / 13.4:1 |
+| `--alt-surface-5` | `#353d48` | `#2b2b30` | A hovered secondary button | 9.3:1 / 11.9:1 |
+| `--alt-tooltip` | `#39404b` | `#2e2e33` | Tooltips. Brightspace fills them with the text colour, which the palette makes near-white under their white text. | white: 10.5:1 / 13.5:1 |
+| `--alt-backdrop` | `#05070a` | `#000000` | Behind a dialog, at 72%: dims the page instead of washing it out | |
 
 Inputs sit *below* the page (darker) rather than above it, which reads as
-"type here" without needing a heavy border.
+"type here" without needing a heavy border. A black page has nothing below
+it, so Black's inputs share its colour and rely on their edge.
 
 #### Lines
 
-| Token | Hex | Used for |
-| --- | --- | --- |
-| `--alt-border` | `#262c35` | Dividers CourseLink already draws (table rows, panel edges) |
-| `--alt-border-strong` | `#343b46` | Card and popover edges |
-| `--alt-control-border` | `#6b7584` | Form controls: 3.1:1 or better on every surface, as WCAG 1.4.11 requires |
+| Token | Graphite | Black | Used for |
+| --- | --- | --- | --- |
+| `--alt-border` | `#262c35` | `#1c1c20` | Dividers CourseLink already draws (table rows, panel edges) |
+| `--alt-border-strong` | `#343b46` | `#2a2a2f` | Card and popover edges |
+| `--alt-border-heavy` | `#4a525e` | `#3d3d44` | Brightspace's strongest rules, scrollbar thumbs, faint icons |
+| `--alt-control-border` | `#6b7584` | `#70707a` | Form controls: 3.1:1 or better on every surface (3.5:1 on Black), as WCAG 1.4.11 requires |
+| `--alt-control-border-hover` | `#8a94a1` | `#8e8e98` | A hovered or emphasised control edge |
 
 #### Text
+
+The same in both styles. The figures are Graphite's, the lower of the two.
 
 | Token | Hex | Role | Lowest contrast on any surface |
 | --- | --- | --- | --- |
@@ -221,8 +254,7 @@ A few colours are deliberately not tokens, because they're CourseLink's own:
 | --- | --- | --- |
 | `#e87511` | Unread dots on the nav icons | CourseLink's orange. 5.9:1 on the nav bar. |
 | `#b54a06` | Notification count badges | A deeper orange so white text passes (5.3:1). |
-| `#39404b` | Tooltips | Brightspace fills tooltips with the text colour, which the palette makes near-white. |
-| `#05070a` at 72% | Dialog backdrop | Dims the page instead of washing it out. |
+| `#b4bcc7`, `#ff8080` | Checkbox ticks, radio dots, the select chevron, the required asterisk, the invalid-field warning | Brightspace draws these as data-URI images, which can't read a variable; they carry the icon and error tokens' values. |
 | `#e8ecf1` / `#151920` | The icon | The text and surface tokens, so the mark matches the theme. |
 
 #### Shadows
@@ -240,16 +272,44 @@ focus rings, selected tabs and highlights. Each one has a hover shade and an
 
 | Accent | Accent | Hover | On-accent | Lowest link contrast | Button text |
 | --- | --- | --- | --- | --- | --- |
-| Blue (default) | `#66b2ff` | `#8fc6ff` | `#071423` | 6.5:1 | 8.3:1 |
-| Gryphon red | `#ff7d8b` | `#ff9ea8` | `#2a050c` | 6.0:1 | 7.6:1 |
-| Gryphon gold | `#f2c14e` | `#f7d47f` | `#231a02` | 8.7:1 | 10.3:1 |
-| Violet | `#b7a3ff` | `#cbbcff` | `#160d36` | 6.8:1 | 8.5:1 |
-| Mint | `#4fd6ac` | `#7ce2c2` | `#032419` | 8.0:1 | 9.1:1 |
+| Blue (default) | `#66b2ff` | `#8fc6ff` | `#071423` | 6.2:1 | 8.3:1 |
+| Gryphon red | `#ff7d8b` | `#ff9ea8` | `#2a050c` | 5.8:1 | 7.6:1 |
+| Gryphon gold | `#f2c14e` | `#f7d47f` | `#231a02` | 7.8:1 | 10.3:1 |
+| Violet | `#b7a3ff` | `#cbbcff` | `#160d36` | 6.3:1 | 8.5:1 |
+| Mint | `#4fd6ac` | `#7ce2c2` | `#032419` | 7.3:1 | 9.1:1 |
 
 "Lowest link contrast" covers every surface and the accent's own highlight
-tint (`--alt-accent-tint`, the accent mixed 14% into the surface). Gryphon red
-and gold come from the University's colours, lightened until they pass on
-dark.
+tint (`--alt-accent-tint`, the accent mixed 14% into the surface), in
+Graphite; Black's figures are higher. Gryphon red and gold come from the
+University's colours, lightened until they pass on dark.
+
+#### Custom accent
+
+Any colour can be the accent, but not every colour can be read on a dark
+page: a navy link disappears. So a custom accent is *derived* from the pick
+rather than used as it is (`alteraCustomAccent()` in
+[`src/shared/settings.js`](src/shared/settings.js)):
+
+1. Keep the pick's hue and saturation.
+2. Raise its lightness, only as far as needed, until it has 4.5:1 as text on
+   the lightest surface accent text lands on and on its own highlight tint. A
+   colour that already passes isn't changed.
+3. Hover is the result mixed 27% toward white, and on-accent is a near-black
+   of the same hue, as in the presets.
+
+| Picked | Becomes |
+| --- | --- |
+| `#003366` (navy) | `#2693ff` |
+| `#c41230` (Guelph red) | `#f06078` |
+| `#0000ff` | `#8585ff` |
+| `#000000` | `#939393` |
+| `#ffc72c` (Guelph gold) | `#ffc72c`, unchanged |
+
+The three colours go on `<html>` as inline custom properties, since a colour
+picked at runtime has no rule in the stylesheet to switch on. When a pick was
+lightened, the popup says so. `tools/check-contrast.js` runs 437 picks from
+all round the hue wheel, black, white and greys among them, through the same
+checks as the presets, in both dark styles.
 
 ### How Brightspace's tokens map
 
@@ -265,7 +325,7 @@ inverting lightness:
 | sylvite | `#f1f5fb` | Hover fills | `--alt-surface-3` |
 | gypsum | `#e3e9f1` | Pressed, secondary buttons | `--alt-surface-4` |
 | mica | `#cdd5dc` | Borders | `--alt-border-strong` |
-| corundum | `#b1b9be` | Strong borders | `#4a525e` |
+| corundum | `#b1b9be` | Strong borders | `--alt-border-heavy` |
 | chromite | `#90989d` | Faint text, disabled | `--alt-faint` |
 | galena | `#6e7477` | Muted text | `--alt-text-3` |
 | tungsten | `#494c4e` | Secondary text | `--alt-text-2` |
@@ -309,6 +369,16 @@ Places where the token swap alone wasn't enough, and what was done:
 | Calendar grids (Day, Week, Month) | Its stylesheet hard-codes the gridlines, the weekend and today shading and the bar under the all-day row; the header above the view switcher ends in a `#ccc` rule | Border tokens for the lines, one and two steps up from the surface for weekends and today |
 | Calendar events | Each calendar's colour comes from a class D2L generates per page: pastels, with `#333` text that turned into link blue | A deep tint of the calendar's hue with light text; the colour dots take the same hue at 62% lightness (see [Generated stylesheets](#layer-3-generated-stylesheets)) |
 | View switchers (Calendar) | The selected button is filled and edged with tungsten (a text colour on dark), with a white inset ring on hover and focus | Accent tint fill, border-coloured edge, ring in the bar's colour; CourseLink's focus edge still shows |
+| Checkbox ticks, radio dots, select chevrons, the required asterisk | Data-URI images with the dark text colour baked in: a ticked box looked empty | Brightspace keeps each in a variable; the variables are remapped to the same shapes in the icon colour |
+| Selected rows in selectable lists (the Roles filter in All courses) | A literal light blue inside the list item's shadow root, under a label in the light text colour | The accent tint, via the shadow sheet |
+| Menus in dropdowns (a course tile's "...", sort menus) | Menu items are filled with the base colour, a shade darker than the dropdown they open in; both are white in light mode | The menu's background variable points at the floating surface |
+| Dialogs that load a page in a frame (Add a File, the editor's Insert Stuff, Quicklink, Image and colour pickers, the Calendar's Print) | Two families of dialog shell, one still white; the framed page showed the page background, darker than the dialog; list rows carried a panel fill and a top rule meant for another list | Both shells on the floating surface; the framed page takes it too, on `<html>` as well as `<body>` (the body can be zero-height); plain list rows are left transparent as CourseLink has them |
+| The HTML editor's writing area | CourseLink passes its background colour to the text-colour picker, which previews and measures contrast against it, and the accessibility checker reads its colours too. Recoloured dark, both judged what you write against a page nobody else sees; tagging its inline colours would also have been saved into the post | Inverted like instructor files (the real colours stay white and dark), a little deeper to sit with the field around it; never tagged |
+| The editor's colour picker | The inline-colour tagging repainted the swatches (pastels and white came out dark) and the contrast preview | Left exactly as CourseLink draws it: the swatches are the colours on offer, and the preview is the colour on the page it will be read on |
+| The editor's own panels (Accessibility Checker, the toolbar over a table or image) | TinyMCE's stylesheet: white, black text, a fixed blue button, pale issue panels | Floating surface, the theme's buttons and fields; each result keeps its colour on a deep tint of the same hue |
+| The editor's Source Code view | A code editor in its own light colours, under class names generated per build | Inverted as one piece |
+| Notices that rise from the bottom of the page (the unsupported-browser notice) | A white panel with a literal grey edge and light grey heading bands | Floating surface, border-token edge, a raised band |
+| Legacy tables with gridlines (Self Registration) | A mid-grey table colour showing between the cells as bright lines | Tagged like other inline colours, as a border colour |
 
 ### The popup
 
@@ -316,14 +386,22 @@ The popup is the one place Altera is visible, so it's where the brand lives.
 It follows the chosen theme: CourseLink's light values in light mode, and the
 same palette as the page in dark mode.
 
-- **One column, 320px**, in three sections: Session, Appearance and a footer.
-  Section titles are small and muted, and controls are labelled in sentence case.
+- **One column, 320px**, in four sections: Session, Appearance, Homepage and
+  a footer. Section titles are small and muted, and controls are labelled in
+  sentence case.
 - **Theme previews** are miniature CourseLink pages (nav bar, a tile, two
-  lines of text and a link) drawn with flat blocks. The dark preview's link
-  takes the selected accent, so changing the accent shows in the preview.
-  System is a hard split, light on the left and dark on the right.
+  lines of text and a link) drawn with flat blocks. The dark preview takes
+  the selected dark style and accent, so changing either shows in the
+  preview. System is a hard split, light on the left and dark on the right.
+- **Dark style** is a two-way switch, Graphite or Black, each with a dot in
+  its page colour. The popup itself follows it.
 - **Accent swatches** are 16px dots with a ring on the selected one. They're
   disabled (and say why on hover) in light mode, where accents don't apply.
+  The sixth, Custom, is a ring in your colour until it's the one in use.
+  Selecting it shows a hue slider, whose track is twelve flat steps round
+  the hue wheel, and a hex field for an exact colour. Neither opens a system
+  colour dialog, which can close an extension's popup in Firefox. If the
+  colour had to be lightened, a line under them says so.
 - **Session status** is a 7px dot (green when active, amber when waiting,
   red on errors) next to a plain-language line ("Signed in · refreshed 2 min
   ago"). That line updates itself while the popup is open. If the browser has
@@ -365,10 +443,12 @@ src/
   content/
     main-world.js       Page world: dark sheet for every shadow root, logo recolouring,
                         hands keep-alive results to D2L's session manager
-    theme.js            Isolated world: sets the theme attribute, recolours generated
+    theme.js            Isolated world: sets the theme attributes, recolours generated
                         stylesheets and inline styles
+    home.js             Top frame, homepage only: folds the information widgets
     session.js          Top frame: calls CourseLink's session-extend endpoint
-  styles/theme.css      The palette and every page-level rule
+  styles/theme.css      The palettes and every page-level colour rule
+  styles/home.css       The homepage tidy-up's few layout rules
 popup/                  Toolbar popup (HTML, CSS, JS)
 icons/                  Generated by tools/make-icons.py
 tools/
@@ -391,7 +471,7 @@ so `manifest.json` is Chrome's (plus Firefox's add-on ID) and
 | Script | World | When | Frames |
 | --- | --- | --- | --- |
 | `main-world.js` | Page (`MAIN`) | `document_start` | All, including `about:blank` |
-| `theme.css` + `settings.js` + `theme.js` | Isolated | `document_start` | All, including `about:blank` |
+| `theme.css` + `home.css` + `settings.js` + `theme.js` + `home.js` | Isolated | `document_start` | All, including `about:blank` (`home.js` stops at once anywhere but the top frame of the homepage) |
 | `session.js` | Isolated | `document_idle` | Top frame only |
 
 Running at `document_start` in every frame matters: CourseLink nests pages in
@@ -406,13 +486,22 @@ Everything hangs off one attribute on `<html>`, set by `theme.js`:
 | --- | --- | --- |
 | `dark` | CourseLink pages | The full palette swap |
 | `pdf` | The pdf.js viewer frame | pdf.js variables mapped to the palette |
-| `content` | Instructor files under `/content/` and University pages under `/shared/` (except the sign-in page) | Filter inversion (if **Darken course files** is on) |
+| `content` | Instructor files under `/content/` and University pages under `/shared/` (except the sign-in page), if **Darken course files** is on; the HTML editor's writing area, always | Filter inversion |
 | *(absent)* | Light mode, and while printing | Nothing applies; CourseLink is untouched |
 
 Every rule in `theme.css` and the shadow sheet is scoped under this
 attribute, so switching themes is one attribute change. It takes effect in a
 single frame with no reload, and light mode is guaranteed to be CourseLink's
-own. `data-altera-accent` sits alongside it and swaps the accent variables.
+own. Three more attributes sit alongside it:
+
+| Attribute | Value | Effect |
+| --- | --- | --- |
+| `data-altera-style` | `graphite` or `black` | Black overrides the palette's surfaces and lines |
+| `data-altera-accent` | A preset's name, or `custom` | Swaps the accent variables; for `custom` they're set inline on `<html>` |
+| `data-altera-frame` | `editor`, or `dialog` for a page framed inside a dialog's page | Which surface a frame takes, where its address can't say |
+
+`data-altera-home` is separate: it scopes the [homepage tidy-up](#homepage-tidy-up),
+which is layout and applies in light mode too.
 
 The attribute is also removed for the length of a print (`beforeprint` /
 `afterprint`), so printouts use CourseLink's own light print styles. Browsers
@@ -515,6 +604,7 @@ different worlds list it.
 | --- | --- | --- |
 | White (every channel ≥ 245) | `data-altera-bg="white"` | `--alt-surface` |
 | Light (luminance > 0.7) and neutral (saturation < 3%) | `data-altera-bg="neutral"` | `--alt-surface-2` |
+| Mid grey (luminance 0.45 to 0.7, neutral): a legacy table's colour showing between its cells | `data-altera-bg="mid"` | `--alt-border-strong` |
 | Light and tinted (grade scheme colours, highlights) | `data-altera-bg="tint"` | `hsl(<same hue> 42% 21%)` with light text |
 | Dark text (luminance < 0.3) | `data-altera-fg="dark"` | `--alt-text` |
 
@@ -522,6 +612,65 @@ The tint rule is why a green "A" grade chip stays green: the hue carries
 meaning, so it's kept and only the lightness changes. Attribute selectors in
 `theme.css` also catch the common white spellings
 (`background-color: #fff`, `white`, ...) before the tagger has run.
+
+Two places are never tagged. The editor's colour picker is all inline
+colours, and they're the point: its swatches and its contrast preview stay
+as CourseLink draws them. And the HTML editor's writing area isn't tagged
+because a tag there would be saved into what you're writing; it's
+[filtered](#authored-content) instead.
+
+### Authored content
+
+Some frames aren't Brightspace's interface but somebody's document, in
+whatever colours they chose: the HTML files instructors upload, University
+pages shown inside courses, and the writing area of the HTML editor. A
+palette swap has nothing to hold on to there, so the whole frame is inverted
+with a filter (`invert(0.9) hue-rotate(180deg)`), which keeps hues, and
+images and video are flipped back.
+
+For the editor this matters beyond looks. CourseLink hands the writing
+area's background colour to its text-colour picker, which previews your
+colour on it and reports the contrast ratio, and the accessibility checker
+reads the colours of what you wrote. A filter changes what's on screen and
+leaves the computed colours alone, so both keep measuring against white,
+which is what everyone without Altera reads your post on. The editor's
+Source Code view gets the same treatment.
+
+A frame's own scrollbar is drawn outside its filter, so it's given its final
+colours directly.
+
+### Homepage tidy-up
+
+`home.js` runs in the top frame and stops at once unless the page is the
+organisation homepage. Course homepages share the `/d2l/home` address
+pattern, so it checks CourseLink's own page context (`data-global-context` on
+`<html>`): on the organisation homepage the org unit is the organisation
+itself.
+
+With **Tidy homepage** on, every widget except My Courses, Announcements and
+Web Tools is folded:
+
+1. The widget gets `d2l-widget-collapsed`, and its content loses `expanded`:
+   the class and attribute CourseLink sets when you choose "Collapse this
+   widget". The folded shape, and the animation when it opens, are
+   CourseLink's own.
+2. The title's text moves into a `<button>` inside the heading, with
+   `aria-expanded` and `aria-controls`, so it works from the keyboard and
+   reads correctly to a screen reader. Clicking anywhere on the header row
+   toggles it.
+3. `home.css` (scoped to `html[data-altera-home]`) hides the widget's
+   "Actions" menu, which held only Collapse and Expand, draws CourseLink's
+   chevron in its place, and closes the gap between folded widgets in a row
+   from 30px to 10px so they read as a list.
+
+Nothing is sent to CourseLink. Its own Collapse action saves to the server;
+Altera sets the same state in the page only, keeps the titles of the widgets
+you opened in CourseLink's `localStorage` (`altera.home`), and remembers how
+CourseLink rendered each widget so that turning the setting off puts every
+one back, with no reload.
+
+Widgets are folded in a `MutationObserver` callback as the page is parsed,
+which runs before the browser paints, so none is drawn open and then closed.
 
 ### Logos
 
@@ -562,14 +711,14 @@ its negative, so `main-world.js` redraws them instead:
   earlier version debounced this by 120ms, and the Grades table flashed grey
   while CourseLink faded the page in.
 - **Theme switches** are a single attribute change: one style recalculation,
-  one frame.
+  one frame. So are dark style and accent switches.
 - The fade-in on each page load is CourseLink's own animation, and it happens
   in light mode too.
 
 ### Already-open tabs
 
 Content scripts normally load only with a page. On install and update (not on
-browser updates), `background.js` injects the same CSS and scripts into every
+browser updates), `background.js` injects the same stylesheets and scripts into every
 open CourseLink tab (the `scripting` permission), so they switch over without
 a reload. It first asks each tab whether it already runs the current version.
 Only current scripts can answer, so a tab that loaded after the update isn't
@@ -616,9 +765,13 @@ sequenceDiagram
 | Key | Default | Stored in |
 | --- | --- | --- |
 | `theme` | `"dark"` | `chrome.storage.sync`, mirrored to CourseLink's `localStorage` |
+| `darkStyle` | `"graphite"` | Same |
 | `accent` | `"blue"` | Same |
+| `customAccent` | `"#ff9d66"` | Same. The colour as picked; the accent is derived from it each time. |
 | `darkContent` | `true` | Same |
+| `tidyHome` | `true` | Same |
 | `keepAlive` | `true` | `chrome.storage.sync` |
+| opened homepage widgets | none | CourseLink's `localStorage` (`altera.home`): their titles |
 | last ping result | n/a | `chrome.storage.local` |
 | `systemDark` | n/a | `chrome.storage.local`: the OS theme, recorded by CourseLink tabs and the popup, because the worker (which handles the shortcut) has no `matchMedia` |
 
@@ -650,15 +803,17 @@ Find the element with DevTools, then pick the layer:
 | Inside a shadow root (the element is under `#shadow-root`) | `SHADOW_CSS` in `main-world.js` |
 | A same-origin `<style>` with literal colours | Usually handled already by layer 3; if not, check the thresholds |
 | An inline `style=` or legacy `bgcolor` attribute | Layer 4 tags it; add a rule for the tag if needed |
+| A fill a shade off the surface it sits on (a menu item in a dropdown, a page framed in a dialog) | Point it at the outer surface's token; in light mode both are white |
+| Somebody's document, or a tool that reads its colours | Filter it; see [Authored content](#authored-content) |
 
 Then check that it doesn't add a gradient or border CourseLink doesn't have
-(toggle the theme off and compare), that light mode is unchanged, and run the
-contrast check.
+(toggle the theme off and compare), that light mode is unchanged, that it
+holds in both dark styles, and run the contrast check.
 
 ### Tools
 
 ```sh
-node tools/check-contrast.js            # every pairing, from theme.css and popup.css
+node tools/check-contrast.js            # every pairing in both dark styles, custom accents included
 node tools/check-contrast.js --verbose  # print each ratio
 node tools/check-tokens.js              # every var(--alt-*) used is defined
 git log origin/main..HEAD --format=%B | python tools/check-attribution.py   # no AI attribution
@@ -699,6 +854,19 @@ pull request template walks through it:
 - **Light lines**, which the area audit can't see: every border, rule, thin
   bar and box-shadow lighter than mid-grey, on every page and in every
   Calendar view (Agenda, Day, Week, Month, List).
+- **Surfaces against each other**, which neither audit can see, since both
+  shades are dark: any fill darker than what it sits on (through slots, so a
+  menu item is compared with its dropdown), and any frame whose page colour
+  differs from what's behind it. This is what catches a band in a dialog.
+- **Dialogs that open from plain buttons**, which a crawl of menus and tabs
+  skips: Add a File and each of its sources, every button on the HTML
+  editor's toolbar and the dialogs behind them, the accessibility checker
+  with content that has problems, the Source Code view, the Calendar's
+  Settings and Print, the Locker's Upload and New Folder.
+- **Both dark styles**, on every page.
+- **The homepage tidy-up**: folded on load, opened by click and by keyboard,
+  remembered after a reload, restored to CourseLink's state when turned off,
+  absent on course homepages, at desktop and phone widths, in both themes.
 - **Phone widths** (390px), including the burger menu and the nav trays.
 - **Flicker**: page loads and theme switches were recorded frame by frame
   (Chrome DevTools screencast) and checked for any light frame.
@@ -727,6 +895,13 @@ pull request template walks through it:
 - **Instructor files** are darkened by inversion, which is right for text but
   can shift colours in diagrams drawn with CSS. Images and video are flipped
   back. Turn off **Darken course files** for a page that looks wrong.
+- **What you write is shown inverted too**, so a colour you pick in the
+  editor appears as its light counterpart while you type (navy looks light
+  blue). The colour that's saved is the one you picked.
+- **A custom accent may not be the exact colour you chose.** One too dark to
+  read on a dark page is lightened, keeping its hue.
+- **Tidy homepage** covers the main CourseLink homepage, not course
+  homepages, and what you open is remembered per browser.
 - **Single sign-on** has its own limit. Keep-alive keeps the CourseLink session
   going, but if the University's sign-in itself expires you'll be asked to
   sign in again.
@@ -741,12 +916,12 @@ images again (usually from the browser cache) to recolour them. There's no
 analytics and no remote code. The full policy is in [PRIVACY.md](PRIVACY.md).
 It stores:
 
-- your four settings (`chrome.storage.sync`)
+- your seven settings (`chrome.storage.sync`)
 - the last keep-alive result, and whether your system is in dark mode
   (`chrome.storage.local`)
 - in CourseLink's own `localStorage`: a copy of your settings and a few
   recoloured logos (300,000 characters at most), so pages render correctly on
-  first paint
+  first paint, and the titles of the homepage widgets you've opened
 
 Permissions: `storage` (settings), `alarms` (the 5-minute timer), `scripting`
 (switching already-open tabs over on install), and host access to CourseLink.

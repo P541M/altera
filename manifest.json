@@ -71,11 +71,13 @@
       "all_frames": true,
       "match_about_blank": true,
       "css": [
-        "src/styles/theme.css"
+        "src/styles/theme.css",
+        "src/styles/home.css"
       ],
       "js": [
         "src/shared/settings.js",
-        "src/content/theme.js"
+        "src/content/theme.js",
+        "src/content/home.js"
       ]
     },
     {

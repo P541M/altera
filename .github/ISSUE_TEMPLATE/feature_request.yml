@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Altera aims to feel like part of CourseLink: nothing it adds should be visible on the page, and the only Altera controls live in the toolbar popup. Ideas that fit that are the easiest to take on.
+        Altera aims to feel like part of CourseLink: it puts nothing of its own on the page, anything it rearranges uses CourseLink's own shapes and can be turned off, and its settings live in the toolbar popup. Ideas that fit that are the easiest to take on.
   - type: textarea
     id: problem
     attributes:

@@ -59,16 +59,30 @@
         </label>
       </div>
 
-      <div class="accent-row">
+      <div class="option-row">
+        <span class="row-title" id="styleLabel">Dark style</span>
+        <div class="segmented" id="darkStyles" role="radiogroup" aria-labelledby="styleLabel">
+          <label><input type="radio" name="darkStyle" value="graphite" /><span><i class="chip chip-graphite" aria-hidden="true"></i>Graphite</span></label>
+          <label><input type="radio" name="darkStyle" value="black" /><span><i class="chip chip-black" aria-hidden="true"></i>Black</span></label>
+        </div>
+      </div>
+
+      <div class="option-row">
         <span class="row-title" id="accentLabel">Accent <span class="accent-name" id="accentName"></span></span>
-        <div class="swatches" role="radiogroup" aria-labelledby="accentLabel">
+        <div class="swatches" id="accents" role="radiogroup" aria-labelledby="accentLabel">
           <label title="Blue"><input type="radio" name="accent" value="blue" aria-label="Blue" /><span style="--swatch: #66b2ff"></span></label>
           <label title="Gryphon red"><input type="radio" name="accent" value="gryphon" aria-label="Gryphon red" /><span style="--swatch: #ff7d8b"></span></label>
           <label title="Gryphon gold"><input type="radio" name="accent" value="gold" aria-label="Gryphon gold" /><span style="--swatch: #f2c14e"></span></label>
           <label title="Violet"><input type="radio" name="accent" value="violet" aria-label="Violet" /><span style="--swatch: #b7a3ff"></span></label>
           <label title="Mint"><input type="radio" name="accent" value="mint" aria-label="Mint" /><span style="--swatch: #4fd6ac"></span></label>
+          <label title="Custom"><input type="radio" name="accent" value="custom" aria-label="Custom" /><span class="swatch-custom"></span></label>
         </div>
       </div>
+      <div class="custom-row" id="customRow" hidden>
+        <input type="range" class="hue" id="customHue" min="0" max="359" step="1" aria-label="Custom accent hue" />
+        <input type="text" class="hex" id="customHex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Custom accent colour, as a hex code" />
+      </div>
+      <p class="custom-note" id="customNote" hidden>Lightened to stay readable on dark</p>
 
       <label class="row">
         <span class="row-text">
@@ -76,6 +90,17 @@
           <span class="row-hint">HTML pages your instructors upload</span>
         </span>
         <input type="checkbox" class="switch" id="darkContent" />
+      </label>
+    </section>
+
+    <section class="section" aria-labelledby="homeTitle">
+      <h2 id="homeTitle">Homepage</h2>
+      <label class="row">
+        <span class="row-text">
+          <span class="row-title">Tidy homepage</span>
+          <span class="row-hint">Folds the information widgets down to their titles</span>
+        </span>
+        <input type="checkbox" class="switch" id="tidyHome" />
       </label>
     </section>
 

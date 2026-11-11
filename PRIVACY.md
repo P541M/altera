@@ -1,6 +1,6 @@
 # Privacy policy
 
-*Last updated: November 3, 2026*
+*Last updated: November 11, 2026*
 
 Altera is a browser extension for the University of Guelph's CourseLink. It
 collects no personal information, and it never sends anything to the
@@ -11,7 +11,9 @@ developer or to any third party.
 Altera runs only on pages at `courselink.uoguelph.ca`. On those pages it:
 
 - **Changes how the page looks.** It reads the page's colours and styles so it
-  can show them in the dark theme. That happens entirely in your browser.
+  can show them in the dark theme, and on the homepage it folds the
+  information widgets down to their titles. That happens entirely in your
+  browser; CourseLink isn't told which widgets you open or close.
 - **Keeps you signed in, if you leave that on.** Every 5 minutes it asks
   CourseLink to extend your session, using the same request and the same
   anti-forgery token CourseLink's own "Continue session" button uses. The
@@ -27,10 +29,10 @@ All of it stays in your browser:
 
 | What | Where |
 | --- | --- |
-| Your four settings (theme, accent, darken course files, keep me signed in) | The browser's extension storage, synced between your own browsers if you use Chrome sync or Firefox Sync |
+| Your seven settings (theme, dark style, accent, custom accent colour, darken course files, tidy homepage, keep me signed in) | The browser's extension storage, synced between your own browsers if you use Chrome sync or Firefox Sync |
 | The result of the last keep-alive request (signed in, expired, and when) | The browser's local extension storage |
 | Whether your system is set to dark mode, so the keyboard shortcut knows what "System" means | The browser's local extension storage |
-| A copy of your settings, and a few recoloured logo images | CourseLink's own storage in your browser, so pages appear in the right theme straight away |
+| A copy of your settings, a few recoloured logo images, and the titles of the homepage widgets you've opened | CourseLink's own storage in your browser, so pages appear in the right theme, and the homepage the way you left it, straight away |
 
 Removing Altera deletes its extension storage. The copy in CourseLink's
 storage is cleared with your browsing data for `courselink.uoguelph.ca`.
@@ -46,7 +48,7 @@ the dark theme. It has no analytics, no tracking, no ads and no remote code.
 
 | Permission | Why Altera needs it |
 | --- | --- |
-| Access to `courselink.uoguelph.ca` | To apply the theme and make the keep-alive request on CourseLink, and nowhere else |
+| Access to `courselink.uoguelph.ca` | To apply the theme, tidy the homepage and make the keep-alive request on CourseLink, and nowhere else |
 | `storage` | To remember your settings and the last keep-alive result |
 | `alarms` | To make the keep-alive request every 5 minutes |
 | `scripting` | To apply Altera to CourseLink tabs that were already open when it was installed or updated, without reloading them |

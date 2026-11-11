@@ -1,0 +1,72 @@
+/*
+ * Altera homepage tidy-up: layout, not colour.
+ *
+ * Every rule is scoped to html[data-altera-home], which home.js sets only on
+ * the organisation homepage while "Tidy homepage" is on, so it applies in
+ * light and dark alike and nowhere else. The folded look is CourseLink's own:
+ * home.js gives a widget the class and attribute CourseLink uses when you
+ * collapse one yourself. These rules only turn its title into the control.
+ */
+
+/* A row the height of CourseLink's own collapsible headers, whose "Actions"
+   menu (Collapse / Expand, kept on CourseLink's servers) gives way to the
+   title, which now does the same thing here */
+html[data-altera-home] .d2l-widget[data-altera-widget] > .d2l-widget-header {
+  min-height: 40px;
+  align-items: center;
+  cursor: pointer;
+}
+html[data-altera-home] .d2l-widget[data-altera-widget] .d2l-homepage-header-menu-wrapper {
+  display: none;
+}
+
+/* The title, as a button with nothing of a button's look */
+html[data-altera-home] [data-altera-toggle] {
+  all: unset;
+  display: block;
+  /* A button sizes to its text even as a block; this lets a long title end
+     in an ellipsis as CourseLink's does */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+/* The heading clips its overflow, so the focus ring goes round the wrapper */
+html[data-altera-home] .d2l-homepage-header-wrapper:has([data-altera-toggle]:focus-visible) {
+  border-radius: 4px;
+  outline: 2px solid var(--d2l-color-celestine);
+  outline-offset: 4px;
+}
+
+/* CourseLink's chevron (the icon on its Actions menu), in the 50px the
+   header keeps free beside the title, where that menu sat */
+html[data-altera-home] .d2l-widget[data-altera-widget] .d2l-homepage-header-wrapper {
+  position: relative;
+}
+html[data-altera-home] .d2l-widget[data-altera-widget] .d2l-homepage-header-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  background-color: var(--d2l-theme-icon-color-standard, var(--d2l-color-tungsten));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M2.39 6.49a1.5 1.5 0 0 1 2.12-.1L9 10.47l4.49-4.08a1.5 1.5 0 0 1 2.02 2.22L10 13.62A1.474 1.474 0 0 1 9 14a1.523 1.523 0 0 1-1-.38L2.49 8.61a1.5 1.5 0 0 1-.1-2.12z'/%3E%3C/svg%3E") center / 18px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M2.39 6.49a1.5 1.5 0 0 1 2.12-.1L9 10.47l4.49-4.08a1.5 1.5 0 0 1 2.02 2.22L10 13.62A1.474 1.474 0 0 1 9 14a1.523 1.523 0 0 1-1-.38L2.49 8.61a1.5 1.5 0 0 1-.1-2.12z'/%3E%3C/svg%3E") center / 18px no-repeat;
+  pointer-events: none;
+}
+html[data-altera-home] .d2l-widget[data-altera-widget="open"] .d2l-homepage-header-wrapper::after {
+  transform: rotate(180deg);
+}
+
+/* Before CourseLink's collapsing component has loaded, a folded widget's
+   content would show as plain markup */
+html[data-altera-home] .d2l-widget[data-altera-widget="closed"] > .d2l-widget-content:not(:defined) {
+  display: none;
+}
+
+/* Folded widgets in a row sit together as a list */
+html[data-altera-home] .d2l-widget[data-altera-widget="closed"] + .d2l-widget[data-altera-widget="closed"] {
+  margin-top: 10px;
+}

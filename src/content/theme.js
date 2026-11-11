@@ -1,7 +1,8 @@
 // Applies the theme to one CourseLink frame (runs in every frame).
 //
-// Sets data-altera-theme / data-altera-accent on <html>; theme.css and the
-// shadow-root sheet in main-world.js key everything off those attributes.
+// Sets data-altera-theme, data-altera-style and data-altera-accent on <html>;
+// theme.css and the shadow-root sheet in main-world.js key everything off
+// those attributes.
 // On top of the static CSS it patches two kinds of colours we can't know in
 // advance:
 //   - per-page CSS classes D2L generates with literal colours (remapSheets)
@@ -9,7 +10,6 @@
 
 (() => {
   const root = document.documentElement;
-  const MIRROR_KEY = "altera.settings";
   const P = 'html[data-altera-theme="dark"]';
   const GENERATED_CLASS = /^\.d2l_\d+_\d+_\d+$/; // .d2l_3_13_579 (remapSheets)
 
@@ -20,6 +20,13 @@
   // sign-in page also lives under /shared/ and is themed like the rest.
   const path = location.pathname;
   const isContentFrame = path.startsWith("/content/") || (path.startsWith("/shared/") && !path.startsWith("/shared/login/"));
+  // The HTML editor's writing area is authored content as well, and
+  // CourseLink's colour picker and accessibility checker read its computed
+  // colours, so it's filtered like the files above and never recoloured.
+  const isEditorFrame = inFrame("tox-edit-area__iframe");
+  // A page framed inside a dialog's own page (the Calendar's print preview)
+  // sits on the dialog's surface, like the page around it.
+  const isInDialog = inFrame("d2l-dialog-frame", 1) || inFrame("ddial_c_frame", 1);
   // CourseLink's PDF viewer (pdf.js) has its own colour variables.
   const isPdfViewer = path.includes("/pdfjs");
   const isTopFrame = window === window.top;
@@ -27,7 +34,7 @@
 
   // All state is declared before the first apply(): injected into an already
   // loaded tab (after an update), apply() remaps and tags straight away.
-  let settings = readMirror() || ALTERA_DEFAULTS;
+  let settings = alteraReadMirror() || ALTERA_DEFAULTS;
   let patching = false;
   let printing = false;
   const remapped = new WeakMap(); // CSSStyleSheet -> rewritten CSS (remapSheets)
@@ -95,36 +102,57 @@
     return settings.theme === "dark" || (settings.theme === "system" && systemDark.matches);
   }
 
+  // Is this document inside an <iframe> with that class? `levelsUp` asks it
+  // of the page this one is framed in instead. The frame's class is there
+  // before its page loads; a dialog page's own <body> classes arrive later.
+  // (Function declarations hoist, so the constants above can call it.)
+  function inFrame(className, levelsUp = 0) {
+    try {
+      let view = window;
+      for (let i = 0; i < levelsUp; i++) {
+        if (view.parent === view) return false;
+        view = view.parent;
+      }
+      return view.frameElement?.classList.contains(className) ?? false;
+    } catch {
+      return false; // a cross-origin parent
+    }
+  }
+
   function apply() {
     if (orphaned()) return;
     let mode = null;
     if (isDark() && !printing) {
-      if (isContentFrame) mode = settings.darkContent ? "content" : null;
+      if (isEditorFrame) mode = "content";
+      else if (isContentFrame) mode = settings.darkContent ? "content" : null;
       else mode = isPdfViewer ? "pdf" : "dark";
     }
 
     if (mode) root.setAttribute("data-altera-theme", mode);
     else root.removeAttribute("data-altera-theme");
+    if (isEditorFrame) root.setAttribute("data-altera-frame", "editor");
+    else if (isInDialog) root.setAttribute("data-altera-frame", "dialog");
+    root.setAttribute("data-altera-style", settings.darkStyle);
     root.setAttribute("data-altera-accent", settings.accent);
+
+    // A custom accent has no rule in theme.css to switch on; its three
+    // colours go on <html> itself, and come off again with the theme.
+    const custom = mode && settings.accent === "custom" ? alteraCustomAccent(settings.customAccent) : null;
+    for (const [property, shade] of [["--alt-accent", "accent"], ["--alt-accent-hover", "hover"], ["--alt-on-accent", "on"]]) {
+      if (custom) root.style.setProperty(property, custom[shade]);
+      else root.style.removeProperty(property);
+    }
+    if (root.getAttribute("style") === "") root.removeAttribute("style");
 
     if (mode === "dark") startPatching();
   }
 
-  // A copy of the settings in the page's localStorage lets us read them
-  // synchronously at document_start, so pages don't flash white while
-  // chrome.storage answers.
-  function readMirror() {
-    try {
-      return { ...ALTERA_DEFAULTS, ...JSON.parse(localStorage.getItem(MIRROR_KEY)) };
-    } catch {
-      return null;
-    }
-  }
-
+  // Keeps the copy of the settings in the page's localStorage current (see
+  // alteraReadMirror in settings.js): the ones that decide the first paint.
   function writeMirror() {
     try {
-      const { theme, accent, darkContent } = settings;
-      localStorage.setItem(MIRROR_KEY, JSON.stringify({ theme, accent, darkContent }));
+      const { theme, darkStyle, accent, customAccent, darkContent, tidyHome } = settings;
+      localStorage.setItem(ALTERA_MIRROR_KEY, JSON.stringify({ theme, darkStyle, accent, customAccent, darkContent, tidyHome }));
     } catch {
       // Storage blocked; we just lose the flash protection.
     }
@@ -321,6 +349,8 @@
   // hard-code light-theme colours, for theme.css and SHADOW_CSS to restyle:
   //   data-altera-bg="white"   plain white panels -> dark surface
   //   data-altera-bg="neutral" light grey panels -> raised dark surface
+  //   data-altera-bg="mid"     mid greys (the grid colour that shows between a
+  //                            legacy table's cells) -> a border colour
   //   data-altera-bg="tint"    tinted chips (grade scheme colours, highlights)
   //                            -> a deep tint of the same hue (--altera-tint)
   //   data-altera-fg="dark"    near-black inline text -> light text
@@ -329,13 +359,17 @@
     const selector = "[style], [bgcolor]";
     const els = node.matches?.(selector) ? [node, ...node.querySelectorAll(selector)] : node.querySelectorAll(selector);
     for (const el of els) {
+      // The editor's colour picker: its swatches are the colours on offer.
+      if (el.closest(".d2l-colourselector")) continue;
       const bg = parseColor(el.style?.backgroundColor || el.getAttribute("bgcolor"));
       if (bg && bg.a >= 0.5) {
         const { r, g, b } = bg;
         const max = Math.max(r, g, b);
         const light = relativeLuminance(bg) > 0.7;
+        const neutral = (max - Math.min(r, g, b)) / max < 0.03;
         if (r >= 245 && g >= 245 && b >= 245) el.setAttribute("data-altera-bg", "white");
-        else if (light && (max - Math.min(r, g, b)) / max < 0.03) el.setAttribute("data-altera-bg", "neutral");
+        else if (light && neutral) el.setAttribute("data-altera-bg", "neutral");
+        else if (neutral && relativeLuminance(bg) > 0.45) el.setAttribute("data-altera-bg", "mid");
         else if (light) {
           // Keep the hue, which often means something (grade scheme
           // colours).

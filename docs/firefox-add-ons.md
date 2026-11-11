@@ -85,10 +85,11 @@ with anything personal blurred or cropped.
 
 ## Notes to reviewers
 
-> Altera themes the University of Guelph's CourseLink (D2L Brightspace) in dark mode and keeps the CourseLink session from timing out. It runs only on https://courselink.uoguelph.ca/*.
+> Altera themes the University of Guelph's CourseLink (D2L Brightspace) in dark mode, folds the information widgets on its homepage, and keeps the CourseLink session from timing out. It runs only on https://courselink.uoguelph.ca/*.
 >
 > - main-world.js runs in the page's world because it styles CourseLink's shadow roots and passes keep-alive results to CourseLink's own session manager. It reads no extension storage.
 > - session.js sends POST /d2l/lp/auth/session/extend, the same request as CourseLink's "Continue session" button, with the anti-forgery token CourseLink keeps in localStorage. The token is never stored or sent anywhere else.
+> - home.js folds widgets on the homepage by changing the page only; it makes no requests.
 > - The only other requests are for CourseLink's own logo images, loaded again to recolour their lettering.
 > - No analytics, no remote code, no third-party requests.
 >

@@ -42,9 +42,9 @@ The same steps for the first upload and every update after it:
 
 Paste it as plain text, one line per paragraph.
 
-> A proper dark mode for the University of Guelph's CourseLink. It covers everything from grades and quizzes to the calendar and the PDF viewer, and it's built to feel like part of CourseLink, with no banners or extra buttons on the page.
+> A proper dark mode for the University of Guelph's CourseLink, in dark grey or true black. It covers everything from grades and quizzes to the calendar and the PDF viewer, and it's built to feel like part of CourseLink, with no banners or badges on the page.
 >
-> Altera also keeps you signed in while a CourseLink tab is open, so you're not logged out mid-assignment. On a shared computer, turn that off in the popup. Pick an accent colour or follow your system theme, and switch anytime with Alt+Shift+D.
+> Altera also keeps you signed in while a CourseLink tab is open, so you're not logged out mid-assignment. On a shared computer, turn that off in the popup. It tidies the homepage too, folding the notices beside your courses down to their titles. Pick any accent colour or follow your system theme, and switch anytime with Alt+Shift+D.
 >
 > Altera collects nothing and only talks to CourseLink. It's open source at https://github.com/P541M/altera and isn't affiliated with the University of Guelph or D2L.
 
@@ -55,7 +55,7 @@ the middle 96×96 pixels with transparent padding around it. Ours fills almost
 the whole square, so it will look slightly larger than other icons; that's
 fine, or `tools/make-icons.py` can produce a padded copy for the store.
 
-**Screenshots:** 1280×800, one to five, in dark mode with the Blue accent.
+**Screenshots:** 1280×800, one to five, in dark mode (Graphite) with the Blue accent.
 CourseLink shows your name, courses and grades, so blur or crop anything
 personal before uploading.
 
@@ -76,15 +76,15 @@ on the dark surface colour, `#151920`.
 ## Privacy practices tab
 
 **Single purpose:** Altera improves how the University of Guelph's CourseLink
-looks and behaves: a dark theme, and keeping the CourseLink session from
-timing out while you use it.
+looks and behaves: a dark theme, a tidier homepage, and keeping the
+CourseLink session from timing out while you use it.
 
 **Permission justifications:**
 
 | Permission | Justification |
 | --- | --- |
-| Host access to `courselink.uoguelph.ca` | Applies the dark theme to CourseLink pages and sends CourseLink's own session-extend request. Altera runs on no other site. |
-| `storage` | Remembers the user's four settings and the result of the last keep-alive request. |
+| Host access to `courselink.uoguelph.ca` | Applies the dark theme to CourseLink pages, folds the homepage's information widgets and sends CourseLink's own session-extend request. Altera runs on no other site. |
+| `storage` | Remembers the user's seven settings and the result of the last keep-alive request. |
 | `alarms` | Runs the keep-alive request every 5 minutes. |
 | `scripting` | Applies Altera to CourseLink tabs that were already open when it was installed or updated, so they don't need reloading. |
 
